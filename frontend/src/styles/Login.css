@@ -1,0 +1,117 @@
+/* Gradient Background */
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to bottom, white, #d3d3d3); /* Gradient from white to grey */
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Bouncing Login Header */
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-10px);
+    }
+    60% {
+      transform: translateY(-5px);
+    }
+  }
+  
+  .auth-header {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #007bff; /* Blue text */
+    animation: bounce 2s infinite; /* Bouncing animation */
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); /* Subtle text shadow */
+    text-align: center;
+  }
+  
+  /* Form Styling */
+  .auth-form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Deeper shadow for a floating effect */
+    width: 100%;
+    max-width: 400px; /* Max width of form */
+    animation: fadeIn 1s ease-in; /* Fade-in effect */
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* Input Fields */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+  
+  .form-group input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Blue glow on focus */
+    outline: none;
+  }
+  
+  /* Submit Button */
+  button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(to right, #007bff, #0056b3); /* Gradient button */
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  button:hover {
+    background: linear-gradient(to right, #0056b3, #003d7a); /* Darker gradient on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Footer Text */
+  .auth-footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .auth-footer a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .auth-footer a:hover {
+    text-decoration: underline;
+  }
+  
