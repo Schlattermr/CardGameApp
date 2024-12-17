@@ -12,5 +12,3 @@ HAS TO BE ON 2 DIFFERENT TERMINALS
     npm start
 3. go to http://localhost:3000/
 4. DB is hosted in SQL Server locally
-
-
