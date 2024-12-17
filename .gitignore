@@ -1,0 +1,113 @@
+# Ignore Visual Studio temporary files, build results, and
+# folder-based project outputs
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# User-specific files
+*.rsuser
+*.rsuser.os
+*.sln.docstates
+
+# User-specific folders
+.vscode/
+.vscode/*
+
+# Mono Auto Generated Files
+mono_crash.*
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code directories
+.vscode/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# Web Server folders
+iisexpress/
+.vs/
+test_results/
+BuildLog.htm
+temp/
+build/
+temp/
+node_modules/
+
+# JetBrains Rider
+.idea/
+
+# Visual Studio Code - Include if you have a ".vscode" folder at the root
+.vscode/*
+
+# Web
+wwwroot/
+node_modules/
+jspm_packages/
+*.bundle.*
+*.min.js
+*.min.css
+bower_components/
+
+# Visual Studio temp files and build artifacts
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]64/
+[Aa][Rr][Mm]/
+[Ww][Ii][Nn]32/
+Build/
+TestResults/
+
+# Exclude build logs
+*.log
+
+# Database files
+*.mdf
+*.ldf
+
+# Publish directory
+.publish/
+
+# Project and solution files
+*.csproj.user
+*.csproj.nuget.dgspec.json
+*.csproj.nuget.g.props
+*.csproj.nuget.g.targets
+*.sqlproj.user
+*.sln.docstates
+.vs/
+
+.fake
+
+# Asset and cache json files
+Backend/Accessors/obj/project.assets.json
+Backend/Accessors/obj/project.nuget.cache
+backend/BackendAPI/obj/project.assets.json
+backend/BackendAPI/obj/project.nuget.cache
+Backend/Engines/obj/project.assets.json
+Backend/Engines/obj/project.nuget.cache
+Backend/Managers/obj/project.assets.json
+Backend/Managers/obj/project.nuget.cache
+backend/obj/project.assets.json
+backend/obj/project.nuget.cache
+Backend/UnitTests/obj/project.assets.json
+Backend/UnitTests/obj/project.nuget.cache
+Backend/View/obj/project.assets.json
+Backend/View/obj/project.nuget.cache
