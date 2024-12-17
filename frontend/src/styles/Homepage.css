@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Press Start 2P', cursive;
+  background-color: #111;
+  color: #fff;
+}
+
+.homepage-container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  background: radial-gradient(circle, #2a9d8f, #1f7d6e); /* Retro color gradient */
+}
+
+.login-box {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: white;
+  color: #0066cc;
+  padding: 20px;
+  font-weight: bold;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  font-family: Arial, sans-serif;
+}
+
+.leaderboard {
+  width: 50%;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.leaderboard-title {
+  font-size: 3rem;
+  text-align: center;
+  color: #ffcc00;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  margin-bottom: 20px;
+}
+
+.leaderboard-table {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.leaderboard-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 35px;
+  font-size: 1.4rem;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 5px;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+}
+
+.leaderboard-rank {
+  width: 10%;
+  text-align: center;
+}
+
+.leaderboard-player {
+  width: 60%;
+  text-align: center;
+}
+
+.leaderboard-score {
+  width: 30%;
+  text-align: center;
+}
+
+.leaderboard-row:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.main-content {
+  width: 50%; 
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #1f7d6e;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 3rem;
+  color: #ffcc00;
+  text-align: center;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+.login-button-container {
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.play-button {
+  padding: 15px 30px;
+  background-color: #ff66b3;
+  border: none;
+  border-radius: 40px;
+  font-size: 2.2rem;
+  color: #fff; 
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  transition: background-color 0.3s, transform 0.3s ease;
+}
+
+.play-button:hover {
+  background-color: #ff3385; 
+  transform: scale(1.3); 
+}
+
