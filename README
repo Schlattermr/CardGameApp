@@ -2,21 +2,13 @@ How to run on LOCAL
 
 HAS TO BE ON 2 DIFFERENT TERMINALS
 
-1. Run backend
-    cd backend
+1. Run backend:
+    cd Backend
     cd BackendAPI
     dotnet run
-    
-    or
-
-    cd backend
-    dotnet run --project BackendAPI/BackendAPI.csproj
-
     
 2. Run frontend
     cd frontend
     npm start
 3. go to http://localhost:3000/
-4. DB is hosted in azure @ csce-361.database.windows.net
-
-
+4. DB is hosted in SQL Server locally
