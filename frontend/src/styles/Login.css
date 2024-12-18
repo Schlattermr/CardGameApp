@@ -57,11 +57,12 @@
   /* Input Fields */
   .form-group {
     margin-bottom: 20px;
+    margin-right: 28px;
   }
   
   .form-group label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-weight: bold;
     color: #333;
   }
@@ -71,7 +72,7 @@
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
-    font-size: 16px;
+    font-size: 24px;
     transition: all 0.3s ease;
   }
   
@@ -115,3 +116,9 @@
     text-decoration: underline;
   }
   
+  .auth-message {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #333;
+  }

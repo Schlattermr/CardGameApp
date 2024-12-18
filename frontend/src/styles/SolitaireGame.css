@@ -127,8 +127,9 @@ body {
 
   .home-button {
     position: fixed;
-    top: 5px;
-    left: 20px;
+    margin-top: 0px;
+    margin-left: 1695px;
+    width: 168px;
     padding: 10px 20px;
     background-color: #007bff;
     color: white;
@@ -138,5 +139,4 @@ body {
     border-radius: 5px;
     cursor: pointer;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-    z-index: 1000; 
   }
