@@ -14,10 +14,11 @@ public class DatabaseUtilities
     {
         var builder = new SqlConnectionStringBuilder
         {
-            DataSource = "csce-361.database.windows.net",
-            UserID = "schlatter",
-            Password = "Password123###",
-            InitialCatalog ="CSCE361"
+            DataSource = "DESKTOP-CM9UCFI",
+            UserID = "DESKTOP-CM9UCFI\\Matthew",
+            InitialCatalog ="CSCE361",
+            IntegratedSecurity = true,
+            TrustServerCertificate = true
         };
 
         var connectionString = builder.ConnectionString;
