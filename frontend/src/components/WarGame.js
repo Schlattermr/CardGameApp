@@ -93,7 +93,6 @@ const playRound = () => {
     .filter((player) => player.hand.length > 0) 
     .map((player) => player.hand[0]);
 
- 
   const winningCard = playedCards.reduce((highest, card, idx) => {
  
     if (!highest || card.cardNumber > highest.card.cardNumber) {
@@ -155,6 +154,29 @@ const playRound = () => {
     }
   };
 
+  /* TODO: Finish updating leaderboard */
+  const getUserWins = async() => {
+
+  };
+
+  const updateLeaderboard = async(username, gameId, wins) => {
+    const requestPayload = {
+      username: username,
+      gameId: gameId,
+      wins: wins
+    };
+
+    try {
+      const response = await fetch('http://localhost:5013/api/leaderboard/update', {
+        method: 'POST',
+        body: JSON.stringify(requestPayload)
+      });
+    } catch (error) {
+      console.error('An error occurred while updating the leaderboard:', error);
+    }
+  };
+  /* Done here */
+  
   useEffect(() => {
     fetchPlayers(); 
   }, []);
@@ -167,7 +189,6 @@ const playRound = () => {
     <div className="war-game">
       {/* Button to navigate back to homepage */}
       <button className="home-button" onClick={navigateToHome}>Go to Homepage</button>
-
       <div className="player-section">
         {players.map((player, index) => (
           <div key={index} className="player">

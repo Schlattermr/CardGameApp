@@ -4,10 +4,6 @@ namespace Managers
 {
     public class DeckManager
     {
-        public void Test()
-        {
-            Console.WriteLine("DeckManager is accessible and working.");
-        }
         public Dictionary<string, List<Card>> InitializeAndDistributeDeck(List<string> playerNames)
         {
             if (playerNames == null || playerNames.Count == 0)

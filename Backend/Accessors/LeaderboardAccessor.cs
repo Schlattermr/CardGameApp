@@ -10,8 +10,9 @@ public class LeaderboardAccessor
      */
     public async Task UpdateUserWinsAsync(int userId, int gameId, int wins, string connectionString)
     {
+        wins++;
         var query = @"UPDATE Leaderboards SET Wins = @Wins 
-                    WHERE UserId = @UserId AND GameId = @GameId";
+                      WHERE UserId = @UserId AND GameId = @GameId";
         var parameters = new Dictionary<string, object>
         {
             {"@Wins", wins},
@@ -27,11 +28,10 @@ public class LeaderboardAccessor
      */
     public async Task<List<Dictionary<string, object>>?> GrabLeaderboardDataAsync(string connectionString)
     {
-        var query = @"
-                SELECT TOP 5 u.Username, l.Wins 
-                FROM Leaderboards l
-                INNER JOIN Users u ON l.UserId = u.UserId
-                ORDER BY l.Wins DESC";
+        var query = @"SELECT u.Username, l.Wins 
+                      FROM Leaderboards l
+                      INNER JOIN Users u ON l.UserId = u.UserId
+                      ORDER BY l.Wins DESC";
 
         var result = await DatabaseUtilities.ExecuteQueryAsync(query, null, connectionString);
         if(result.Count > 0) 

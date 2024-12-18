@@ -92,7 +92,7 @@ public class Deck : IDeck
         }
 
         Random seed = new Random(); // creates a randomized seed to determine order
-        for(int i = 14; i > 0; --i)
+        for(int i = deck.Count - 1; i > 0; --i)
         {
             int randomPosition = seed.Next(i + 1);
 

@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Concurrent;
 using Engines;
 using Managers;
+using Accessors;
+using BackendAPI.Models;
 
 namespace BackendAPI.Controllers
 {
@@ -78,14 +80,6 @@ namespace BackendAPI.Controllers
                 Console.WriteLine($"[ERROR] Failed to reset game: {ex.Message}");
                 return StatusCode(500, "An error occurred while resetting the game.");
             }
-        }
-
-        [HttpGet("test")]
-        public IActionResult TestDeckManager()
-        {
-            DeckManager manager = new DeckManager();
-            manager.Test();
-            return Ok("DeckManager test passed.");
         }
     }
 }
