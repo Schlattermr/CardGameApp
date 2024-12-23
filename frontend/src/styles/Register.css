@@ -80,6 +80,14 @@
     box-shadow: 0 0 5px rgba(0, 51, 102, 0.5); /* Dark blue glow on focus */
     outline: none;
   }
+
+  input:user-invalid {
+    border-color: red;
+  }
+
+  input:user-valid {
+    border-color: green;
+  }
   
   /* Submit Button */
   button {
