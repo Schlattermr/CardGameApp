@@ -26,8 +26,10 @@ const Login = ({ onLogin }) => {
         setMessage("Login successful!");
         if (onLogin) {
           onLogin(data.username, data.token); 
-          setTimeout(() => {
-            navigate("/homepage");
+          setTimeout(() => { // Redirect login to homepage after 1 second, not waiting-room
+            if(window.location.href === "http://localhost:3000/login") {
+              navigate("/homepage");
+            }
           }, 1000);
         }
       } else {
