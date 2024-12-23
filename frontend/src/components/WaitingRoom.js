@@ -8,7 +8,6 @@ const WaitingRoom = () => {
   const maxPlayers = 6; 
   const navigate = useNavigate(); 
 
- 
   const fetchPlayers = async () => {
     try {
       const response = await fetch("http://localhost:5013/api/game/players");

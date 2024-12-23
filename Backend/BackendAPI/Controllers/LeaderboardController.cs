@@ -34,10 +34,10 @@ public class LeaderboardController : ControllerBase
         }
     }
 
-    [HttpPost("leaderboard/update")]
-    public async Task<IActionResult> UpdateLeaderboardWins([FromBody] Leaderboard request)
+    [HttpPost("leaderboard/get/wins")]
+    public async Task<IActionResult> GetLeaderboardWins(string username)
     {
-        if (request == null || request.UserId <= 0 || request.GameId <= 0 || request.Wins < 0)
+        if (username == null)
         {
             return BadRequest("Invalid request payload.");
         }
@@ -46,15 +46,39 @@ public class LeaderboardController : ControllerBase
         {
             string connectionString = DatabaseUtilities.CreateConnectionString();
             LeaderboardAccessor leaderboardAccessors = new LeaderboardAccessor();
-            await leaderboardAccessors.UpdateUserWinsAsync(request.UserId, request.GameId, request.Wins, connectionString);
+            await leaderboardAccessors.GrabUserWinsDataAsync(username, connectionString);
 
-            Console.WriteLine($"[INFO] Updated leaderboard for user {request.UserId}.");
-            return Ok("Leaderboard updated successfully.");
+            Console.WriteLine($"[INFO] Got wins from leaderboard for user {username}.");
+            return Ok("Leaderboard wins grabbed successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[ERROR] Failed to update leaderboard: {ex.Message}");
-            return StatusCode(500, "An error occurred while updating the leaderboard.");
+            Console.WriteLine($"[ERROR] Failed to get wins from leaderboard: {ex.Message}");
+            return StatusCode(500, "An error occurred while getting wins from the leaderboard.");
+        }
+    }
+
+    [HttpPost("leaderboard/update")]
+    public async Task<IActionResult> UpdateLeaderboardWins(string username, int wins)
+    {
+        if (wins == 0)
+        {
+            return BadRequest("Invalid request payload.");
+        }
+
+        try
+        {
+            string connectionString = DatabaseUtilities.CreateConnectionString();
+            LeaderboardAccessor leaderboardAccessors = new LeaderboardAccessor();
+            await leaderboardAccessors.UpdateUserWinsAsync(username, wins, connectionString);
+
+            Console.WriteLine($"[INFO] Got wins from leaderboard for user {username}.");
+            return Ok("Leaderboard wins grabbed successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] Failed to get wins from leaderboard: {ex.Message}");
+            return StatusCode(500, "An error occurred while getting wins from the leaderboard.");
         }
     }
 }

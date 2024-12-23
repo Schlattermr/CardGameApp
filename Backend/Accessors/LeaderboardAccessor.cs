@@ -8,23 +8,45 @@ public class LeaderboardAccessor
     /*
      *  Updates wins in the leaderboard
      */
-    public async Task UpdateUserWinsAsync(int userId, int gameId, int wins, string connectionString)
+    public async Task UpdateUserWinsAsync(string username, int wins, string connectionString)
     {
         wins++;
         var query = @"UPDATE Leaderboards SET Wins = @Wins 
-                      WHERE UserId = @UserId AND GameId = @GameId";
+                      WHERE UserId = @UserId";
         var parameters = new Dictionary<string, object>
         {
             {"@Wins", wins},
-            {"@UserId", userId},
-            {"@GameId", gameId}
+            {"@Username", username}
         };
 
         await DatabaseUtilities.ExecuteNonQueryAsync(query, parameters, connectionString);
     }
 
     /*
-     *  Grabs top 5 usernames and wins to use on leaderboard in frontend
+     *  Grabs user wins from username
+     */
+    public async Task<List<Dictionary<string, object>>?> GrabUserWinsDataAsync(string username, string connectionString)
+    {
+        var query = @"SELECT l.Wins FROM Leaderboards l
+                      INNER JOIN Users u ON l.UserId = u.UserId
+                      WHERE u.Username = @Username";
+        var parameters = new Dictionary<string, object>
+        {
+            {"@Username", username}
+        };
+        var result = await DatabaseUtilities.ExecuteQueryAsync(query, null, connectionString);
+        if (result.Count > 0)
+        {
+            return result;
+        }
+        else
+        {
+            return null;    // Return null if no user was found
+        }
+    }
+
+    /*
+     *  Grabs top 7 usernames and wins to use on leaderboard in frontend
      */
     public async Task<List<Dictionary<string, object>>?> GrabLeaderboardDataAsync(string connectionString)
     {

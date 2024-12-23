@@ -8,7 +8,6 @@ const WarGame = () => {
   const [gameOver, setGameOver] = useState(false);
   const [finalWinner, setFinalWinner] = useState(""); 
 
-
   const getCardImage = (cardNumber, cardSuit) => {
     const suitNames = ['C', 'D', 'H', 'S']; 
     const cardNumberNames = [
@@ -152,17 +151,40 @@ const playRound = () => {
       console.log(`${highestScorer.name} is the winner with ${highestScorer.score} points!`);
       setFinalWinner(`${highestScorer.name} is the winner with ${highestScorer.score} points!`);
     }
+    updateLeaderboard(highestScorer.name);
   };
 
-  /* TODO: Finish updating leaderboard */
-  const getUserWins = async() => {
+  const getUserWins = async(username) => {
+    const requestPayload = {
+      username: username
+    };
 
-  };
+    try {
+      const response = await fetch('http://localhost:5013/api/leaderboard/get/wins', {
+        method: 'POST',
+        body: JSON.stringify(requestPayload)
+      });
 
-  const updateLeaderboard = async(username, gameId, wins) => {
+      if (response.ok) {
+        const data = await response.json();
+        console.log("User wins loaded:", data);
+        return data;
+      } else {
+        console.error("Failed to fetch user wins:", response.statusText);
+        return null;
+      }
+    } catch (err) {
+      console.error("Error fetching user wins:", err);
+      return null;
+    };
+  }
+
+  const updateLeaderboard = async(username) => {
+    const wins = await getUserWins(username);
+
     const requestPayload = {
       username: username,
-      gameId: gameId,
+      gameId: 1,
       wins: wins
     };
 
@@ -171,6 +193,12 @@ const playRound = () => {
         method: 'POST',
         body: JSON.stringify(requestPayload)
       });
+
+      if (response.ok) {
+        console.log("Leaderboard updated successfully.");
+      } else {
+        console.error("Failed to update leaderboard:", response.statusText);
+      }
     } catch (error) {
       console.error('An error occurred while updating the leaderboard:', error);
     }
@@ -187,7 +215,7 @@ const playRound = () => {
   return (
     <div className="war-game">
       {/* Button to navigate back to homepage */}
-      <button className="home-button" onClick={navigateToHome}>Go to Homepage</button>
+      <button className="home-button" onClick={() => { navigateToHome(); }}>Go to Homepage</button>
       <div className="player-section">
         {players.map((player, index) => (
           <div key={index} className="player">
