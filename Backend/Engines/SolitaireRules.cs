@@ -5,12 +5,20 @@ namespace Engines;
 
 public class SolitaireRules : ISolitaireRules
 {
-    protected Deck Deck = new Deck();
-    protected TableauPile Tableau1 = new TableauPile(), Tableau2 = new TableauPile(), Tableau3 = new TableauPile(), 
-        Tableau4 = new TableauPile(), Tableau5 = new TableauPile(), Tableau6 = new TableauPile(), Tableau7 = new TableauPile();
-    protected FoundationPile FoundationClubs = new FoundationPile(), FoundationDiamonds = new FoundationPile(), 
-        FoundationHearts = new FoundationPile(), FoundationSpades = new FoundationPile();
-    public Pile Stock = new Pile(), Discard = new Pile(); // Can only select the discard's last card for play
+    public Deck Deck = new Deck();
+    public TableauPile Tableau1 = new TableauPile(), 
+                          Tableau2 = new TableauPile(), 
+                          Tableau3 = new TableauPile(), 
+                          Tableau4 = new TableauPile(), 
+                          Tableau5 = new TableauPile(), 
+                          Tableau6 = new TableauPile(), 
+                          Tableau7 = new TableauPile();
+    public FoundationPile FoundationClubs = new FoundationPile(), 
+                             FoundationDiamonds = new FoundationPile(), 
+                             FoundationHearts = new FoundationPile(), 
+                             FoundationSpades = new FoundationPile();
+    public Pile Stock = new Pile(), 
+                Discard = new Pile(); // Can only select the discard's last card for play
 
     public void CreateBoard()
     {

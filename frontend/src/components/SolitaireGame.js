@@ -6,17 +6,14 @@ let selected_card = null;
 const SolitaireGame = () => {
   const [deckId, setDeckId] = useState(null);
   const [cards, setCards] = useState([]);
-  const [stacks, setStacks] = useState([
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-  ]);
+  const [stacks, setStacks] = useState([[], [], [], [], [], [], []]);
   const [drawStack, setDrawStack] = useState([]);
   const [topCard, setTopCard] = useState(null);
+  const [revealedCards, setRevealedCards] = useState([]);
+  const suitNames = ['C', 'D', 'H', 'S']; 
+  const cardNumberNames = [
+    'A', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'Q', 'K' // 0 is for 10
+  ];
 
   useEffect(() => {
     // Fetch a new deck of cards and shuffle it
@@ -61,16 +58,20 @@ const SolitaireGame = () => {
 
     setDrawStack(remainingCards);
     setStacks(newStacks.reverse());
+
+    // Add bottom card of each stack to revealed cards
+    const bottomCards = newStacks.map((stack) => stack[stack.length - 1]);
+    setRevealedCards(bottomCards);
   };
 
-  const HandleSlotClick = () => {
+  const handleSlotClick = () => {
     if (selected_card) {
       selected_card.classList.remove('selected');
       selected_card = null;
     }
   };  
 
-  const HandleCardClick = (card) => {
+  const handleCardClick = (card) => {
     if (selected_card === null) {
       selected_card = card;
       card.classList.add('selected');
@@ -88,7 +89,7 @@ const SolitaireGame = () => {
           selected_card = card;
         } else {
           if (targetStack.lastElementChild === card) {
-            MoveCards(sourceStack, targetStack, selected_card);
+            moveCards(sourceStack, targetStack, selected_card);
             // Ensure selected_card is valid before accessing its classList
             if (selected_card && selected_card.classList) {
               selected_card.classList.remove('selected');
@@ -106,9 +107,8 @@ const SolitaireGame = () => {
       }
     }
   };
-  
 
-  const HandleDrawStackClick = () => {
+  const handleDrawStackClick = () => {
     if (drawStack.length > 0) {
       const newTopCard = drawStack[0];
       setTopCard(newTopCard); // Update the top card
@@ -117,7 +117,7 @@ const SolitaireGame = () => {
     }
   };
 
-  const MoveCards = (sourceStack, targetStack, selectedCard) => {
+  const moveCards = (sourceStack, targetStack, selectedCard) => {
     if (!selectedCard) {
       console.error("No card selected to move.");
       return;
@@ -160,41 +160,37 @@ const SolitaireGame = () => {
     <div className="solitaire-container">
       <button className="home-button" onClick={() => navigateToHome()}>Go to Homepage</button>
       <div className="card-row">
-        <div className="card-slot" id="card-slot" onClick={(e) => HandleSlotClick()}></div>
-        <div className="card-slot" id="card-slot" onClick={(e) => HandleSlotClick()}></div>
-        <div className="card-slot" id="card-slot" onClick={(e) => HandleSlotClick()}></div>
-        <div className="card-slot" id="card-slot" onClick={(e) => HandleSlotClick()}></div>
+        <div className="card-slot" id="card-slot" onClick={(e) => handleSlotClick()}></div>
+        <div className="card-slot" id="card-slot" onClick={(e) => handleSlotClick()}></div>
+        <div className="card-slot" id="card-slot" onClick={(e) => handleSlotClick()}></div>
+        <div className="card-slot" id="card-slot" onClick={(e) => handleSlotClick()}></div>
         <div className="card-filler" id="card-filler"></div>
         <div className={topCard ? "card" : "card-slot"} id={topCard ? "card" : "card-slot"} onClick={() => {}}>
           <noscript>
             Only display first image if draw pile is selected, otherwise display card slot
           </noscript>
-          {topCard && <img
-            src={topCard.image}
-            alt="Card Face"
-            className="card-face"
-          />}
+          {topCard && <img src={topCard.image} alt="Card Face" className="card-face"/>}
         </div>
-        <div className="card" id="card" onClick={HandleDrawStackClick}>
-          <img
-            src={"https://deckofcardsapi.com/static/img/back.png"}
-            alt="Card Back"
-            className="card-face"
-          />
+        <div className="card" id="card" onClick={handleDrawStackClick}>
+          {drawStack.length > 0 ? (
+            <img src={"https://deckofcardsapi.com/static/img/back.png"} alt="Card Back" className="card-face"/>
+          ) : (
+            <img src={"https://as1.ftcdn.net/v2/jpg/09/88/84/70/1000_F_988847079_yMrhhzz9kO1Nu1SjkECqxyNfHGd4BD0O.jpg"} alt="Reset Deck" className="reset-deck"/>
+          )}
         </div>
       </div>
       <div className="card-row">
         {stacks.map((stack, stackIndex) => (
           <div className="card-stack" key={stackIndex}>
             {stack.length === 0 ? (
-              <div className="card-slot" id="card-slot" onClick={(e) => HandleSlotClick()}></div>
+              <div className="card-slot" id="card-slot" onClick={(e) => handleSlotClick()}></div>
             ) : (
               stack.map((card, cardIndex) => (
                 <div
                   className="card"
                   key={cardIndex}
                   style={{ '--card-index': cardIndex }}
-                  onClick={(e) => HandleCardClick(e.currentTarget)}
+                  onClick={(e) => handleCardClick(e.currentTarget)}
                 >
                   <img
                     src={cardIndex === stack.length - 1 ? card.image : "https://deckofcardsapi.com/static/img/back.png"}
