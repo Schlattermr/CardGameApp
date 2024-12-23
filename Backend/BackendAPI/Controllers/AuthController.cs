@@ -14,7 +14,7 @@ using System.Security.Claims;
 namespace BackendAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/auth")]
 public class AuthController : ControllerBase
 {
     private readonly UserAccessor _userAccessor;
