@@ -175,7 +175,6 @@ const playRound = () => {
       console.error('An error occurred while updating the leaderboard:', error);
     }
   };
-  /* Done here */
   
   useEffect(() => {
     fetchPlayers(); 

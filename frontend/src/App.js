@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
 import WarGame from './components/WarGame';
@@ -8,6 +8,8 @@ import Homepage from './components/Homepage';
 import WaitingRoom from './components/WaitingRoom';
 
 const App = () => {
+  const navigate = useNavigate();
+
   const [auth, setAuth] = useState({
     token: localStorage.getItem('token'),
     username: localStorage.getItem('username'),
@@ -30,6 +32,7 @@ const App = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     setAuth({ token: null, username: null });
+    navigate("/login");
   };
 
   return (

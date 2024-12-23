@@ -73,6 +73,11 @@ public class AuthController : ControllerBase
             }
 
             var passwordHash = await _userAccessor.GetPasswordHashAsync((int)userId, _connectionString);
+            if (string.IsNullOrEmpty(passwordHash))
+            {
+                Console.WriteLine($"[ERROR] Password hash for user '{dto.Username}' is null or empty.");
+                return Unauthorized("Invalid username or password.");
+            }
 
             // Verify the password using bcrypt
             var isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password, passwordHash);
@@ -83,13 +88,20 @@ public class AuthController : ControllerBase
             }
 
             // Create a token if login is successful
+            var jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
+            if (string.IsNullOrEmpty(jwtSecretKey))
+            {
+                Console.WriteLine("[ERROR] JWT_SECRET_KEY environment variable is not set.");
+                return StatusCode(500, "Server configuration error. Please contact support.");
+            }
+
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, dto.Username),
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET_KEY")));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(

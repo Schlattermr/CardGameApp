@@ -28,7 +28,7 @@ public class LeaderboardAccessor
      */
     public async Task<List<Dictionary<string, object>>?> GrabLeaderboardDataAsync(string connectionString)
     {
-        var query = @"SELECT u.Username, l.Wins 
+        var query = @"SELECT TOP 7 u.Username, l.Wins 
                       FROM Leaderboards l
                       INNER JOIN Users u ON l.UserId = u.UserId
                       ORDER BY l.Wins DESC";

@@ -45,7 +45,7 @@ const HomePage = ({ auth, onLogout }) => {
       <div className="login-button-container">
           {auth.token ? (
             <>
-              <span>Welcome, {auth.username}!</span>
+              <span className="welcome-text">Welcome, {auth.username}!</span>
               <button className="play-button" onClick={onLogout}>
                 Logout
               </button>

@@ -102,6 +102,13 @@ body {
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
 }
 
+.welcome-text {
+  font-size: 1.2rem;
+  color: #ffcc00;
+  text-align: center;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
 .login-button-container {
   display: flex;
   position: absolute;

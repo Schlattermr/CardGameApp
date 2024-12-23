@@ -26,8 +26,9 @@ const Login = ({ onLogin }) => {
         setMessage("Login successful!");
         if (onLogin) {
           onLogin(data.username, data.token); 
-        } else {
-          navigate("/homepage");
+          setTimeout(() => {
+            navigate("/homepage");
+          }, 1000);
         }
       } else {
         const error = await response.text();
