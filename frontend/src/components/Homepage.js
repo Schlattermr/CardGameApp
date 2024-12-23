@@ -59,7 +59,6 @@ const HomePage = ({ auth, onLogout }) => {
 
       {/* Right side - Play Buttons */}
       <div className="main-content">
-        <h1 className="title">Procrastination Pastimes</h1>
         <img className="img" src="procrastinationpastimes.png" alt="Procrastination Pastimes Logo" />
         <div className="button-container">
           <button className="play-button" onClick={() => window.location.href = "/waiting-room"}>

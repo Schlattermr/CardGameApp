@@ -95,13 +95,6 @@ body {
   box-sizing: border-box;
 }
 
-.title {
-  font-size: 3rem;
-  color: #ffcc00;
-  text-align: center;
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
-}
-
 .img {
   width: 100%;
   max-width: 300px;
