@@ -115,7 +115,7 @@ const playRound = () => {
   setPlayers((prevPlayers) =>
     prevPlayers.map((player, idx) => ({
       ...player,
-      hand: player.hand.slice(1), 
+      hand: player.hand, 
       score: idx === winningCard.playerIndex ? player.score + 1 : player.score, 
     }))
   );
@@ -138,6 +138,14 @@ const playRound = () => {
     console.log("Continuing the game...");
     setRoundWinner(""); 
     setAllRevealed(false); 
+
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((player) => ({
+        ...player,
+        hand: player.hand.length > 1 ? player.hand.slice(1) : [], 
+        score: player.score, 
+      }))
+    );
   };
 
   const determineFinalWinner = () => {
