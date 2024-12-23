@@ -34,7 +34,7 @@ public class LeaderboardController : ControllerBase
         }
     }
 
-    [HttpPost("leaderboard/get/wins")]
+    [HttpPost("get/wins")]
     public async Task<IActionResult> GetLeaderboardWins(string username)
     {
         if (username == null)
@@ -58,7 +58,7 @@ public class LeaderboardController : ControllerBase
         }
     }
 
-    [HttpPost("leaderboard/update")]
+    [HttpPost("update")]
     public async Task<IActionResult> UpdateLeaderboardWins(string username, int wins)
     {
         if (wins == 0)
