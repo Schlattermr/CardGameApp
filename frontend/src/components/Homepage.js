@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/Homepage.css'; // Import the CSS file
+import '../styles/Homepage.css';
 
-const HomePage = () => {
+const HomePage = ({ auth, onLogout }) => {
   const [leaderboard, setLeaderboard] = useState([]);
 
   useEffect(() => {
     async function fetchLeaderboard() {
       try {
-        const response = await fetch('http://localhost:5013/api/Leaderboard');
+        const response = await fetch('http://localhost:5013/api/Leaderboard', {
+          headers: {
+            "Authorization": `Bearer ${auth.token}`,
+          },
+        });
         const data = await response.json();
         setLeaderboard(data);
       } catch (err) {
@@ -16,7 +20,7 @@ const HomePage = () => {
     }
   
     fetchLeaderboard();
-  }, []);
+  }, [auth.token]);
 
   return (
     <div className="homepage-container">
@@ -38,14 +42,24 @@ const HomePage = () => {
         </ul>
       </div>
 
+      <div className="login-button-container">
+          {auth.token ? (
+            <>
+              <span>Welcome, {auth.username}!</span>
+              <button className="play-button" onClick={onLogout}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <button className="play-button" onClick={() => window.location.href = "/login"}>
+              Login
+            </button>
+          )}
+        </div>
+
       {/* Right side - Play Buttons */}
       <div className="main-content">
         <h1 className="title">Procrastination Pastimes</h1>
-        <div className="login-button-container">
-          <button className="play-button" onClick={() => window.location.href = "/login"}>
-            Login
-          </button>
-        </div>
         <div className="button-container">
           <button className="play-button" onClick={() => window.location.href = "/waiting-room"}>
             Play War

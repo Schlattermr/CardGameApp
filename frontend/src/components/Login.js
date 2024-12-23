@@ -19,9 +19,13 @@ const Login = ({ onLogin }) => {
       });
 
       if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("username", data.username);
+
         setMessage("Login successful!");
         if (onLogin) {
-          onLogin(username); 
+          onLogin(data.username, data.token); 
         } else {
           navigate("/homepage");
         }
@@ -29,7 +33,7 @@ const Login = ({ onLogin }) => {
         const error = await response.text();
         setMessage(error || "Login failed.");
       }
-    } catch (err) {
+    } catch (e) {
       setMessage("An error occurred. Please try again.");
     }
   };

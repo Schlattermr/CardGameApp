@@ -6,6 +6,10 @@ using Accessors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BCrypt.Net;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using System.Security.Claims;
 
 namespace BackendAPI.Controllers;
 
@@ -78,8 +82,29 @@ public class AuthController : ControllerBase
                 return Unauthorized("Invalid username or password.");
             }
 
+            // Create a token if login is successful
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Name, dto.Username),
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET_KEY")));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: "procrastination-pastimes",
+                audience: "procrastination-pastimes",
+                claims: claims,
+                expires: DateTime.Now.AddHours(1),
+                signingCredentials: credentials
+            );
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenString = tokenHandler.WriteToken(token);
+
             Console.WriteLine($"[INFO] User '{dto.Username}' logged in successfully.");
-            return Ok("Login successful.");
+            return Ok(new { token = tokenString, username = dto.Username });
         }
         catch (Exception ex)
         {
