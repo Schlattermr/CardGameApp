@@ -106,11 +106,11 @@ body {
   }
 
 /* Card Stacking Container */
-.card-stack {
-  position: relative;
-  width: 100px;
-  height: auto; 
-}
+  .card-stack {
+    position: relative;
+    width: 100px;
+    height: auto; 
+  }
 
   .card-stack .card {
     position: absolute;
