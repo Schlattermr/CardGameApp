@@ -15,6 +15,7 @@ const SolitaireGame = () => {
     [],
     [],
   ]);
+  const [drawStack, setDrawStack] = useState([]);
 
   useEffect(() => {
     // Fetch a new deck of cards and shuffle it
@@ -57,6 +58,7 @@ const SolitaireGame = () => {
     // The remaining cards go into a separate stack (after the first 7 stacks)
     const remainingCards = shuffledCards.slice(index);
 
+    setDrawStack(remainingCards);
     setStacks(newStacks.reverse());
   };
 
@@ -122,9 +124,25 @@ const SolitaireGame = () => {
         <div className="card-slot" id="card-slot" onClick={(e) => HandleSlotClick()}></div>
         <div className="card-slot" id="card-slot" onClick={(e) => HandleSlotClick()}></div>
         <div className="card-filler" id="card-filler"></div>
-        <div className="card-slot" id="card-slot" onClick={(e) => HandleSlotClick()}></div>
-        <div className="card" id="card">
-          <img src="https://deckofcardsapi.com/static/img/back.png" alt="Card Face" className="card-face" />
+        <div className="card" id="card" onClick={() => {HandleSlotClick()}}>
+          <img
+            src={drawStack[0].image}
+            alt="Card Face"
+            className="card-face"
+          />
+        </div>
+        <div className="card" id="card" onClick={() => {
+          if (drawStack.length > 0) {
+            const topCard = drawStack[0];
+            setDrawStack(drawStack.slice(1));
+            console.log("Drawn card:", topCard);
+          }
+        }}>
+          <img
+            src={"https://deckofcardsapi.com/static/img/back.png"}
+            alt="Card Face"
+            className="card-face"
+          />
         </div>
       </div>
       <div className="card-row">
