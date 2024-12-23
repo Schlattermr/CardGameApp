@@ -16,6 +16,7 @@ const SolitaireGame = () => {
     [],
   ]);
   const [drawStack, setDrawStack] = useState([]);
+  const [topCard, setTopCard] = useState(null);
 
   useEffect(() => {
     // Fetch a new deck of cards and shuffle it
@@ -25,8 +26,8 @@ const SolitaireGame = () => {
         const data = await response.json();
         setDeckId(data.deck_id);
         await dealCards(data.deck_id);
-      } catch (err) {
-        console.error('Error fetching deck:', err);
+      } catch (e) {
+        console.error('Error fetching deck:', e);
       }
     };
 
@@ -40,8 +41,8 @@ const SolitaireGame = () => {
       const shuffledCards = data.cards;
       setCards(shuffledCards);
       distributeCards(shuffledCards);
-    } catch (err) {
-      console.error('Error dealing cards:', err);
+    } catch (e) {
+      console.error('Error dealing cards:', e);
     }
   };
 
@@ -67,7 +68,7 @@ const SolitaireGame = () => {
       selected_card.classList.remove('selected');
       selected_card = null;
     }
-  };
+  };  
 
   const HandleCardClick = (card) => {
     if (selected_card === null) {
@@ -76,7 +77,7 @@ const SolitaireGame = () => {
     } else {
       const sourceStack = selected_card.parentElement;
       const targetStack = card.parentElement;
-
+  
       if (selected_card === card) {
         selected_card.classList.remove('selected');
         selected_card = null;
@@ -88,10 +89,16 @@ const SolitaireGame = () => {
         } else {
           if (targetStack.lastElementChild === card) {
             MoveCards(sourceStack, targetStack, selected_card);
-            selected_card.classList.remove('selected');
+            // Ensure selected_card is valid before accessing its classList
+            if (selected_card && selected_card.classList) {
+              selected_card.classList.remove('selected');
+            }
             selected_card = null;
           } else {
-            selected_card.classList.remove('selected');
+            // Deselect the current selected card
+            if (selected_card && selected_card.classList) {
+              selected_card.classList.remove('selected');
+            }
             card.classList.add('selected');
             selected_card = card;
           }
@@ -99,48 +106,79 @@ const SolitaireGame = () => {
       }
     }
   };
+  
 
-  const MoveCards = (sourceStack, targetStack, selected_card) => {
-    const cardIndex = Array.from(sourceStack.children).indexOf(selected_card);
-    const cardsToMove = Array.from(sourceStack.children).slice(cardIndex, sourceStack.children.length);
+  const HandleDrawStackClick = () => {
+    if (drawStack.length > 0) {
+      const newTopCard = drawStack[0];
+      setTopCard(newTopCard); // Update the top card
+      setDrawStack(drawStack.slice(1)); // Remove the card from the draw stack
+      console.log("Drawn card:", newTopCard);
+    }
+  };
 
+  const MoveCards = (sourceStack, targetStack, selectedCard) => {
+    if (!selectedCard) {
+      console.error("No card selected to move.");
+      return;
+    }
+  
     setStacks((prevStacks) => {
+      const sourceStackIndex = Array.from(sourceStack.parentElement.children).indexOf(sourceStack);
+      const targetStackIndex = Array.from(targetStack.parentElement.children).indexOf(targetStack);
+  
       const newStacks = [...prevStacks];
+      const sourceCards = [...newStacks[sourceStackIndex]];
+      const targetCards = [...newStacks[targetStackIndex]];
+  
+      // Find the index of the selected card in the source stack
+      const cardIndex = Array.from(sourceStack.children).indexOf(selectedCard);
+  
+      // Move the selected card and any above it
+      const cardsToMove = sourceCards.splice(cardIndex);
+      targetCards.push(...cardsToMove);
+  
+      // Update stacks
+      newStacks[sourceStackIndex] = sourceCards;
+      newStacks[targetStackIndex] = targetCards;
+  
       return newStacks;
     });
+  
+    // Safely handle deselecting the card (only if selected_card is valid)
+    if (selected_card && selected_card.classList) {
+      selected_card.classList.remove('selected');
+    }
+    selected_card = null;
+  };  
 
-    cardsToMove.forEach((card) => {
-      targetStack.appendChild(card);
-      card.style.setProperty('--card-index', targetStack.children.length - 1);
-    });
+  const navigateToHome = () => {
+    window.location.href = "/"; 
   };
 
   return (
     <div className="solitaire-container">
-      <button className="home-button" onClick={() => window.location.href = "/homepage"}>Go to Homepage</button>
+      <button className="home-button" onClick={() => navigateToHome()}>Go to Homepage</button>
       <div className="card-row">
         <div className="card-slot" id="card-slot" onClick={(e) => HandleSlotClick()}></div>
         <div className="card-slot" id="card-slot" onClick={(e) => HandleSlotClick()}></div>
         <div className="card-slot" id="card-slot" onClick={(e) => HandleSlotClick()}></div>
         <div className="card-slot" id="card-slot" onClick={(e) => HandleSlotClick()}></div>
         <div className="card-filler" id="card-filler"></div>
-        <div className="card" id="card" onClick={() => {HandleSlotClick()}}>
-          <img
-            src={drawStack[0].image}
+        <div className={topCard ? "card" : "card-slot"} id={topCard ? "card" : "card-slot"} onClick={() => {}}>
+          <noscript>
+            Only display first image if draw pile is selected, otherwise display card slot
+          </noscript>
+          {topCard && <img
+            src={topCard.image}
             alt="Card Face"
             className="card-face"
-          />
+          />}
         </div>
-        <div className="card" id="card" onClick={() => {
-          if (drawStack.length > 0) {
-            const topCard = drawStack[0];
-            setDrawStack(drawStack.slice(1));
-            console.log("Drawn card:", topCard);
-          }
-        }}>
+        <div className="card" id="card" onClick={HandleDrawStackClick}>
           <img
             src={"https://deckofcardsapi.com/static/img/back.png"}
-            alt="Card Face"
+            alt="Card Back"
             className="card-face"
           />
         </div>
@@ -159,8 +197,8 @@ const SolitaireGame = () => {
                   onClick={(e) => HandleCardClick(e.currentTarget)}
                 >
                   <img
-                    src={card.image}
-                    alt="Card Face"
+                    src={cardIndex === stack.length - 1 ? card.image : "https://deckofcardsapi.com/static/img/back.png"}
+                    alt={cardIndex === stack.length - 1 ? "Card Face" : "Card Back"}
                     className="card-face"
                   />
                 </div>
