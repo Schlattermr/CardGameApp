@@ -102,6 +102,13 @@ body {
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
 }
 
+.img {
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 30px;
+  border-radius: 40px;
+}
+
 .welcome-text {
   font-size: 1.2rem;
   color: #ffcc00;
@@ -139,6 +146,6 @@ body {
 
 .play-button:hover {
   background-color: #ff3385; 
-  transform: scale(1.3); 
+  transform: scale(1.2); 
 }
 
