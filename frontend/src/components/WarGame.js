@@ -77,7 +77,6 @@ const WarGame = () => {
     }
   };
 
-
 const playRound = () => {
   console.log("Playing round...");
   if (players.every((player) => player.hand.length === 0)) {
@@ -176,8 +175,8 @@ const playRound = () => {
         console.error("Failed to fetch user wins:", response.statusText);
         return null;
       }
-    } catch (err) {
-      console.error("Error fetching user wins:", err);
+    } catch (e) {
+      console.error("Error fetching user wins:", e);
       return null;
     }
   };
