@@ -84,6 +84,6 @@ public class LeaderboardController : ControllerBase
 
 public class UpdateLeaderboardRequest
 {
-    public string Username { get; set; }
+    public required string Username { get; set; }
     public int Wins { get; set; }
 }
