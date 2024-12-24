@@ -12,7 +12,9 @@ public class LeaderboardAccessor
     {
         wins++;
         var query = @"UPDATE Leaderboards SET Wins = @Wins 
-                      WHERE UserId = @UserId";
+                      FROM Leaderboards l
+                      INNER JOIN Users u ON l.UserId = u.UserId
+                      WHERE u.Username = @Username";
         var parameters = new Dictionary<string, object>
         {
             {"@Wins", wins},
@@ -34,7 +36,7 @@ public class LeaderboardAccessor
         {
             {"@Username", username}
         };
-        var result = await DatabaseUtilities.ExecuteQueryAsync(query, null, connectionString);
+        var result = await DatabaseUtilities.ExecuteQueryAsync(query, parameters, connectionString);
         if (result.Count > 0)
         {
             return result;

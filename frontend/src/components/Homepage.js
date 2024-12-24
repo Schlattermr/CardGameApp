@@ -8,7 +8,7 @@ const HomePage = ({ auth, onLogout }) => {
   useEffect(() => {
     async function fetchLeaderboard() {
       try {
-        const response = await fetch('http://localhost:5013/api/leaderboard');
+        const response = await fetch('http://localhost:5013/api/leaderboard/all/data');
         const data = await response.json();
         setLeaderboard(data);
       } catch (err) {

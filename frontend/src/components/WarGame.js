@@ -162,21 +162,16 @@ const playRound = () => {
     updateLeaderboard(highestScorer.name);
   };
 
-  const getUserWins = async(username) => {
-    const requestPayload = {
-      username: username
-    };
-
+  const getUserWins = async (username) => {
     try {
-      const response = await fetch('http://localhost:5013/api/leaderboard/get/wins', {
-        method: 'POST',
-        body: JSON.stringify(requestPayload)
+      const response = await fetch(`http://localhost:5013/api/leaderboard/wins?username=${username}`, {
+        method: 'GET',
       });
-
+  
       if (response.ok) {
         const data = await response.json();
-        console.log("User wins loaded:", data);
-        return data;
+        console.log("User data loaded:", data);
+        return data[0].Wins;
       } else {
         console.error("Failed to fetch user wins:", response.statusText);
         return null;
@@ -184,21 +179,24 @@ const playRound = () => {
     } catch (err) {
       console.error("Error fetching user wins:", err);
       return null;
-    };
-  }
+    }
+  };
 
-  const updateLeaderboard = async(username) => {
+  const updateLeaderboard = async (username) => {
     const wins = await getUserWins(username);
+    console.log("Updating leaderboard for", username, "with", wins, "wins.");
 
     const requestPayload = {
       username: username,
-      gameId: 1,
-      wins: wins
+      wins:  wins != null ? wins : 0
     };
 
     try {
       const response = await fetch('http://localhost:5013/api/leaderboard/update', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(requestPayload)
       });
 
