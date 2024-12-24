@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace BackendAPI.Controllers;
 
@@ -39,6 +40,13 @@ public class AuthController : ControllerBase
             {
                 Console.WriteLine($"[WARNING] Registration failed: Username '{dto.Username}' already exists.");
                 return BadRequest("Username already exists.");
+            }
+
+            // Check password with regex
+            if (!Regex.IsMatch(dto.Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"))
+            {
+                Console.WriteLine($"[WARNING] Registration failed: Password for username '{dto.Username}' does not meet requirements.");
+                return BadRequest("Password must be at least 8 characters long and contain one uppercase and one lowercase letter, one number, and one special character (@$!%*?&).");
             }
 
             // Hash the password using bcrypt
