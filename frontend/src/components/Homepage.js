@@ -46,6 +46,7 @@ const HomePage = ({ auth, onLogout }) => {
           {auth.token ? (
             <>
               <span className="welcome-text">Welcome, {auth.username}!</span>
+              <noscript>Profile Photo for potential profile page: https://www.kohls.com/cnc/media/1.0.46/images/dgsImages/ic-user-profile@3x.png</noscript>
               <button className="play-button" onClick={onLogout}>
                 Logout
               </button>
@@ -66,6 +67,9 @@ const HomePage = ({ auth, onLogout }) => {
           </button>
           <button className="play-button" onClick={() => window.location.href = "/solitaire"}>
             Play Solitaire
+          </button>
+          <button className="play-button" onClick={() => window.location.href = "/blackjack"}>
+            Play Blackjack
           </button>
         </div>
       </div>

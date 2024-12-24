@@ -6,6 +6,7 @@ import WarGame from './components/WarGame';
 import SolitaireGame from './components/SolitaireGame';
 import Homepage from './components/Homepage';
 import WaitingRoom from './components/WaitingRoom';
+import Blackjack from './components/Blackjack';
 
 const App = () => {
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ const App = () => {
         <Route path="/solitaire" element={<SolitaireGame />} />
         <Route path="/homepage" element={<Homepage auth={auth} onLogout={handleLogout} />} />
         <Route path="/waiting-room" element={<WaitingRoom />} />
+        <Route path="/blackjack" element={<Blackjack />} />
       </Routes>
     </div>
   );
