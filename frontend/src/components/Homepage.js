@@ -3,15 +3,12 @@ import '../styles/Homepage.css';
 
 const HomePage = ({ auth, onLogout }) => {
   const [leaderboard, setLeaderboard] = useState([]);
+  const profilePhoto = "https://static-cdn.jtvnw.net/jtv_user_pictures/ae42de0f-cff2-43f5-83dd-af36483434c7-profile_image-70x70.png";
 
   useEffect(() => {
     async function fetchLeaderboard() {
       try {
-        const response = await fetch('http://localhost:5013/api/Leaderboard', {
-          headers: {
-            "Authorization": `Bearer ${auth.token}`,
-          },
-        });
+        const response = await fetch('http://localhost:5013/api/leaderboard');
         const data = await response.json();
         setLeaderboard(data);
       } catch (err) {
@@ -45,8 +42,7 @@ const HomePage = ({ auth, onLogout }) => {
       <div className="login-button-container">
           {auth.token ? (
             <>
-              <span className="welcome-text">Welcome, {auth.username}!</span>
-              <noscript>Profile Photo for potential profile page: https://www.kohls.com/cnc/media/1.0.46/images/dgsImages/ic-user-profile@3x.png</noscript>
+              <span className="welcome-text">Welcome<img className="profile-photo" src={profilePhoto}></img>{auth.username}!</span>
               <button className="play-button" onClick={onLogout}>
                 Logout
               </button>

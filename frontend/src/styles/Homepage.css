@@ -96,8 +96,8 @@ body {
 }
 
 .img {
-  width: 100%;
-  max-width: 300px;
+  width: 600px;
+  height: 400px;
   margin-bottom: 30px;
   border-radius: 40px;
 }
@@ -107,6 +107,14 @@ body {
   color: #ffcc00;
   text-align: center;
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+.profile-photo {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  margin-left: 10px;
+  margin-right: 5px;
 }
 
 .login-button-container {
