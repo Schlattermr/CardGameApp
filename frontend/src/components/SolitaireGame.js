@@ -10,10 +10,6 @@ const SolitaireGame = () => {
   const [drawStack, setDrawStack] = useState([]);
   const [topCard, setTopCard] = useState(null);
   const [revealedCards, setRevealedCards] = useState([]);
-  const suitNames = ['C', 'D', 'H', 'S']; 
-  const cardNumberNames = [
-    'A', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'Q', 'K' // 0 is for 10
-  ];
 
   useEffect(() => {
     // Fetch a new deck of cards and shuffle it
@@ -29,7 +25,7 @@ const SolitaireGame = () => {
     };
 
     fetchDeck();
-  }, []);
+  });
 
   const dealCards = async (deckId) => {
     try {
