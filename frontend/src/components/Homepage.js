@@ -42,7 +42,7 @@ const HomePage = ({ auth, onLogout }) => {
       <div className="login-button-container">
           {auth.token ? (
             <>
-              <span className="welcome-text">Welcome<img className="profile-photo" src={profilePhoto} draggable="false"></img>{auth.username}!</span>
+              <span className="welcome-text">Welcome<img className="profile-photo" src={profilePhoto} alt="" draggable="false"></img>{auth.username}!</span>
               <button className="play-button" onClick={onLogout}>
                 Logout
               </button>

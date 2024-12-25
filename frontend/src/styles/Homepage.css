@@ -136,6 +136,8 @@ body {
 .play-button {
   padding: 15px 30px;
   background-color: #ff66b3;
+  width: auto;
+  margin-top: 10px;
   border: none;
   border-radius: 40px;
   font-size: 2.2rem;
@@ -150,3 +152,154 @@ body {
   transform: scale(1.2); 
 }
 
+/* Responsive Design for Modern Sized Phones */
+@media only screen and (max-width: 450px) {
+  .homepage-container {
+    height: auto;
+  }
+
+  .login-button-container {
+    position: top;
+    align-items: center;
+    display: inline-block;
+  }
+
+  .welcome-text {
+    font-size: 1rem;
+    align-items: center;
+  }
+
+  .button-container {
+    gap: 10px;
+  }
+
+  .profile-photo {
+    width: 25px;
+    height: 25px;
+  }
+
+  .homepage-container {
+    flex-direction: column;
+  }
+
+  .leaderboard {
+    width: 100%;
+    margin-top: 150px;
+  }
+
+  .leaderboard-row {
+    padding: 20px;
+    font-size: 0.8rem;
+  }
+
+  .leaderboard-title {
+    font-size: 2rem;
+  }
+
+  .main-content {
+    width: 100%;
+  }
+
+  .img {
+    width: 72%;
+    height: auto;
+  }
+
+  .play-button {
+    font-size: 1.8rem;
+  }
+}
+
+/* Responsive Design for Skinnier Phones */
+@media only screen and (max-width: 360px) {
+  .login-button-container {
+    position: top;
+    align-items: center;
+    display: inline-block;
+  }
+
+  .welcome-text {
+    font-size: 0.8rem;
+    align-items: center;
+  }
+
+  .button-container {
+    gap: 10px;
+  }
+
+  .play-button {
+    padding: 15px 20px;
+    font-size: 0.6rem;
+    width: auto;
+  }
+
+  .profile-photo {
+    width: 25px;
+    height: 25px;
+  }
+
+  .homepage-container {
+    flex-direction: column;
+  }
+
+  .leaderboard {
+    width: 100%;
+    margin-top: 150px;
+  }
+
+  .leaderboard-row {
+    padding: 20px;
+    font-size: 0.62rem;
+  }
+
+  .leaderboard-title {
+    font-size: 1.6rem;
+  }
+
+  .main-content {
+    width: 100%;
+  }
+
+  .img {
+    width: 72%;
+    height: auto;
+  }
+
+  .play-button {
+    font-size: 1.8rem;
+  }
+}
+
+/* Responsive Design for Tablets */
+@media only screen and (max-width: 1270px) {
+  .homepage-container {
+    flex-direction: column;
+  }
+
+  .leaderboard {
+    width: 100%;
+    margin-top: 150px;
+  }
+
+  .leaderboard-row {
+    padding: 20px;
+    font-size: 1rem;
+  }
+
+  .leaderboard-title {
+    font-size: 2rem;
+  }
+
+  .main-content {
+    width: 100%;
+  }
+
+  .img {
+    width: 45%;
+    height: auto;
+  }
+
+  .play-button {
+    font-size: 1.8rem;
+  }
+}
