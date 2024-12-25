@@ -234,6 +234,7 @@ const playRound = () => {
                   src={getCardImage(player.hand[0].cardNumber, player.hand[0].cardSuit)}
                   alt={`Card: ${player.hand[0].cardNumber} of ${player.hand[0].cardSuit}`}
                   className="card-image"
+                  draggable="false"
                 />
               ) : (
                 <p>No Cards</p>

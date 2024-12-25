@@ -61,7 +61,7 @@ const WaitingRoom = () => {
     <div className="waiting-room">
       <div className="waiting-area">
         <h2 className="waiting-text">Lobby</h2>
-        <img className ="loading-gif" src={loadingGif} alt="Loading..." />
+        <img className ="loading-gif" src={loadingGif} alt="Loading..." draggable="false"/>
         <ul>
           {players.map((player, index) => (
             <li key={index}>{player.username}</li>

@@ -42,7 +42,7 @@ const HomePage = ({ auth, onLogout }) => {
       <div className="login-button-container">
           {auth.token ? (
             <>
-              <span className="welcome-text">Welcome<img className="profile-photo" src={profilePhoto}></img>{auth.username}!</span>
+              <span className="welcome-text">Welcome<img className="profile-photo" src={profilePhoto} draggable="false"></img>{auth.username}!</span>
               <button className="play-button" onClick={onLogout}>
                 Logout
               </button>
@@ -56,7 +56,7 @@ const HomePage = ({ auth, onLogout }) => {
 
       {/* Right side - Play Buttons */}
       <div className="main-content">
-        <img className="img" src="procrastinationpastimes.png" alt="Procrastination Pastimes Logo" />
+        <img className="img" src="procrastinationpastimes.png" alt="Procrastination Pastimes Logo" draggable="false"/>
         <div className="button-container">
           <button className="play-button" onClick={() => window.location.href = "/waiting-room"}>
             Play War

@@ -11,7 +11,7 @@ const Blackjack = () => {
     return (
         <div className="blackjack-container">
             <button className="home-button" onClick={() => { navigateToHome(); }}>Go to Homepage</button>
-            <img className="honey-gif" src={moneyGif} alt="Money Gif" />
+            <img className="honey-gif" src={moneyGif} alt="Money Gif" draggable="false"/>
         </div>
     );
 };

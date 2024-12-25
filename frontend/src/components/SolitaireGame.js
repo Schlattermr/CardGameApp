@@ -169,13 +169,13 @@ const SolitaireGame = () => {
           <noscript>
             Only display first image if draw pile is selected, otherwise display card slot
           </noscript>
-          {topCard && <img src={topCard.image} alt="Card Face" className="card-face"/>}
+          {topCard && <img src={topCard.image} alt="Card Face" className="card-face" draggable="false"/>}
         </div>
         <div className="card" id="card" onClick={handleDrawStackClick}>
           {drawStack.length > 0 ? (
-            <img src={"https://deckofcardsapi.com/static/img/back.png"} alt="Card Back" className="card-face"/>
+            <img src={"https://deckofcardsapi.com/static/img/back.png"} alt="Card Back" className="card-face" draggable="false"/>
           ) : (
-            <img src={"https://as1.ftcdn.net/v2/jpg/09/88/84/70/1000_F_988847079_yMrhhzz9kO1Nu1SjkECqxyNfHGd4BD0O.jpg"} alt="Reset Deck" className="reset-deck"/>
+            <img src={"https://as1.ftcdn.net/v2/jpg/09/88/84/70/1000_F_988847079_yMrhhzz9kO1Nu1SjkECqxyNfHGd4BD0O.jpg"} alt="Reset Deck" className="reset-deck" draggable="false"/>
           )}
         </div>
       </div>
@@ -196,6 +196,7 @@ const SolitaireGame = () => {
                     src={cardIndex === stack.length - 1 ? card.image : "https://deckofcardsapi.com/static/img/back.png"}
                     alt={cardIndex === stack.length - 1 ? "Card Face" : "Card Back"}
                     className="card-face"
+                    draggable="false"
                   />
                 </div>
               ))
