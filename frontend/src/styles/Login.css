@@ -18,7 +18,7 @@
   font-family: 'Arial', sans-serif;
 }
 
-.auth-container-fade {
+.auth-container.fade-out {
   animation: fadeOut 0.8s ease-out forwards;
 }
   
