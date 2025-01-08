@@ -25,7 +25,7 @@ const SolitaireGame = () => {
     };
 
     fetchDeck();
-  });
+  }, []);
 
   const dealCards = async (deckId) => {
     try {
