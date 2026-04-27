@@ -7,8 +7,8 @@ const WaitingRoom = () => {
   const [players, setPlayers] = useState([]); 
   const maxPlayers = 6; 
   const navigate = useNavigate(); 
+  let loadingGif = "https://media.tenor.com/wpSo-8CrXqUAAAAi/loading-loading-forever.gif";
 
- 
   const fetchPlayers = async () => {
     try {
       const response = await fetch("http://localhost:5013/api/game/players");
@@ -18,8 +18,8 @@ const WaitingRoom = () => {
       } else {
         console.error("Failed to fetch players");
       }
-    } catch (error) {
-      console.error("Error fetching players:", error);
+    } catch (e) {
+      console.error("Error fetching players:", e);
     }
   };
 
@@ -38,8 +38,8 @@ const WaitingRoom = () => {
       } else {
         console.error("Failed to add player");
       }
-    } catch (error) {
-      console.error("Error adding player:", error);
+    } catch (e) {
+      console.error("Error adding player:", e);
     }
   };
 
@@ -60,17 +60,17 @@ const WaitingRoom = () => {
   return (
     <div className="waiting-room">
       <div className="waiting-area">
-        <h2>Waiting Area</h2>
+        <h2 className="waiting-text">Lobby</h2>
+        <img className ="loading-gif" src={loadingGif} alt="Loading..." draggable="false"/>
         <ul>
           {players.map((player, index) => (
             <li key={index}>{player.username}</li>
           ))}
         </ul>
-        {players.length < maxPlayers && <p>Waiting for more players...</p>}
+        {players.length < maxPlayers && <p className="waiting-text">Waiting for more players...</p>}
       </div>
 
       <div className="auth-section">
-        <h2>Login</h2>
         <Login onLogin={addPlayer} /> {/* Pass addPlayer as a prop */}
       </div>
     </div>

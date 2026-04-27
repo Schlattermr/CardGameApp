@@ -6,6 +6,7 @@ const Login = ({ onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isFading, setIsFading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -19,23 +20,30 @@ const Login = ({ onLogin }) => {
       });
 
       if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("username", data.username);
+
         setMessage("Login successful!");
         if (onLogin) {
-          onLogin(username); 
-        } else {
-          navigate("/homepage");
+          onLogin(data.username, data.token); 
         }
-      } else {
-        const error = await response.text();
-        setMessage(error || "Login failed.");
+
+        setIsFading(true);
+
+        setTimeout(() => { // Redirect login to homepage after 1 second, not waiting-room
+          if(window.location.href === "http://localhost:3000/login") {
+            navigate("/homepage");
+          }
+        }, 800);
       }
-    } catch (err) {
+    } catch (e) {
       setMessage("An error occurred. Please try again.");
     }
   };
 
   return (
-    <div className="auth-container">
+    <div className={`auth-container ${isFading ? "fade-out" : ""}`}>
       <h1 className="auth-header">Login</h1>
       <form className="auth-form" onSubmit={handleSubmit}>
         <div className="form-group">

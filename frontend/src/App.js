@@ -1,25 +1,52 @@
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/Login'; // Corrected import
-import Register from './components/Register'; // Corrected import
-import WarGame from './components/WarGame'; // Correct import
-import SolitaireGame from './components/SolitaireGame'; // Correct import
-import Homepage from './components/Homepage'; 
-import WaitingRoom from './components/WaitingRoom'; 
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import Login from './components/Login';
+import Register from './components/Register';
+import WarGame from './components/WarGame';
+import SolitaireGame from './components/SolitaireGame';
+import Homepage from './components/Homepage';
+import WaitingRoom from './components/WaitingRoom';
+import Blackjack from './components/Blackjack';
 
 const App = () => {
+  const navigate = useNavigate();
+
+  const [auth, setAuth] = useState({
+    token: localStorage.getItem('token'),
+    username: localStorage.getItem('username'),
+  });
+
+  useEffect(() => {
+    // Check for token in localStorage on initial load
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('username');
+    setAuth({ token, username });
+  }, []);
+
+  const handleLogin = (username, token) => {
+    localStorage.setItem('token', token);
+    localStorage.setItem('username', username);
+    setAuth({ token, username });
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    setAuth({ token: null, username: null });
+    navigate("/login");
+  };
+
   return (
     <div>
       <Routes>
-        {/* Redirect root to Login */}
-        <Route path="/" element={<Navigate to="/homepage" />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Navigate to={auth.token ? "/homepage" : "/login"} />} />
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/register" element={<Register />} />
-        {/* Add WarGame and SolitaireGame routes */}
         <Route path="/war" element={<WarGame />} />
         <Route path="/solitaire" element={<SolitaireGame />} />
-        <Route path="/homepage" element={<Homepage />} />
+        <Route path="/homepage" element={<Homepage auth={auth} onLogout={handleLogout} />} />
         <Route path="/waiting-room" element={<WaitingRoom />} />
+        <Route path="/blackjack" element={<Blackjack />} />
       </Routes>
     </div>
   );

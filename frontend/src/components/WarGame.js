@@ -8,7 +8,6 @@ const WarGame = () => {
   const [gameOver, setGameOver] = useState(false);
   const [finalWinner, setFinalWinner] = useState(""); 
 
-
   const getCardImage = (cardNumber, cardSuit) => {
     const suitNames = ['C', 'D', 'H', 'S']; 
     const cardNumberNames = [
@@ -78,7 +77,6 @@ const WarGame = () => {
     }
   };
 
-
 const playRound = () => {
   console.log("Playing round...");
   if (players.every((player) => player.hand.length === 0)) {
@@ -93,7 +91,6 @@ const playRound = () => {
     .filter((player) => player.hand.length > 0) 
     .map((player) => player.hand[0]);
 
- 
   const winningCard = playedCards.reduce((highest, card, idx) => {
  
     if (!highest || card.cardNumber > highest.card.cardNumber) {
@@ -117,7 +114,7 @@ const playRound = () => {
   setPlayers((prevPlayers) =>
     prevPlayers.map((player, idx) => ({
       ...player,
-      hand: player.hand.slice(1), 
+      hand: player.hand, 
       score: idx === winningCard.playerIndex ? player.score + 1 : player.score, 
     }))
   );
@@ -140,6 +137,14 @@ const playRound = () => {
     console.log("Continuing the game...");
     setRoundWinner(""); 
     setAllRevealed(false); 
+
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((player) => ({
+        ...player,
+        hand: player.hand.length > 1 ? player.hand.slice(1) : [], 
+        score: player.score, 
+      }))
+    );
   };
 
   const determineFinalWinner = () => {
@@ -153,8 +158,57 @@ const playRound = () => {
       console.log(`${highestScorer.name} is the winner with ${highestScorer.score} points!`);
       setFinalWinner(`${highestScorer.name} is the winner with ${highestScorer.score} points!`);
     }
+    updateLeaderboard(highestScorer.name);
   };
 
+  const getUserWins = async (username) => {
+    try {
+      const response = await fetch(`http://localhost:5013/api/leaderboard/wins?username=${username}`, {
+        method: 'GET',
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log("User data loaded:", data);
+        return data[0].Wins;
+      } else {
+        console.error("Failed to fetch user wins:", response.statusText);
+        return null;
+      }
+    } catch (e) {
+      console.error("Error fetching user wins:", e);
+      return null;
+    }
+  };
+
+  const updateLeaderboard = async (username) => {
+    const wins = await getUserWins(username);
+    console.log("Updating leaderboard for", username, "with", wins, "wins.");
+
+    const requestPayload = {
+      username: username,
+      wins:  wins != null ? wins : 0
+    };
+
+    try {
+      const response = await fetch('http://localhost:5013/api/leaderboard/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestPayload)
+      });
+
+      if (response.ok) {
+        console.log("Leaderboard updated successfully.");
+      } else {
+        console.error("Failed to update leaderboard:", response.statusText);
+      }
+    } catch (error) {
+      console.error('An error occurred while updating the leaderboard:', error);
+    }
+  };
+  
   useEffect(() => {
     fetchPlayers(); 
   }, []);
@@ -166,8 +220,7 @@ const playRound = () => {
   return (
     <div className="war-game">
       {/* Button to navigate back to homepage */}
-      <button className="home-button" onClick={navigateToHome}>Go to Homepage</button>
-
+      <button className="home-button" onClick={() => { navigateToHome(); }}>Go to Homepage</button>
       <div className="player-section">
         {players.map((player, index) => (
           <div key={index} className="player">
@@ -181,6 +234,7 @@ const playRound = () => {
                   src={getCardImage(player.hand[0].cardNumber, player.hand[0].cardSuit)}
                   alt={`Card: ${player.hand[0].cardNumber} of ${player.hand[0].cardSuit}`}
                   className="card-image"
+                  draggable="false"
                 />
               ) : (
                 <p>No Cards</p>

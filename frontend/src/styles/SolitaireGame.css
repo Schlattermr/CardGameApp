@@ -15,16 +15,31 @@ body {
   font-family: Arial, sans-serif;
 }
   
-  .solitaire-container h1 {
-    font-size: 36px;
-    margin-bottom: 20px;
-  }
+.solitaire-container h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
   
-  .solitaire-container p {
-    font-size: 18px;
-  }
+.solitaire-container p {
+  font-size: 18px;
+}
+
+/* Reset Draw Deck Image */
+.reset-deck {
+  width: 120px;
+  height: 150px;
+  background-color: white;
+  border: 2px solid #000;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  user-select: none;
+}
   
-  /* Card Container */
+/* Card Container */
 .card {
   width: 100px;
   height: 150px;
@@ -40,25 +55,25 @@ body {
   user-select: none;
 }
 
-  /* Card Face Image */
-  .card .card-face {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+/* Card Face Image */
+.card .card-face {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-  /* Card Hover */
-  .card:hover {
-    transform: scale(1.08);
-    transition: 0.2s ease-in-out; 
-    z-index: 100;
-  }
+/* Card Hover */
+.card:hover {
+  transform: scale(1.08);
+  transition: 0.2s ease-in-out; 
+  z-index: 100;
+}
 
-  /*Card Selected*/
-  .card.selected {
-    border: 4px solid blue;
-    transform: scale(1.04) translateY(calc(var(--card-index, 0) * 45px));
-  }
+/*Card Selected*/
+.card.selected {
+  border: 4px solid blue;
+  transform: scale(1.04) translateY(calc(var(--card-index, 0) * 45px));
+}
 
 /* Card Row Alignment */
 .card-row {
@@ -70,40 +85,40 @@ body {
   padding-left: 40px;
 }
 
-  /* Card blank slot */
-  .card-row .card-slot {
-    width: 100px;
-    height: 150px;
-    background-color: #256f66;
-    border: 2px solid #2a9d8f;
-    border-radius: 10px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-    display: flex;
-    justify-content: left;
-    align-items: left;
-    position: relative;
-    overflow: hidden;
-    user-select: none;
-  }
+/* Card blank slot */
+.card-row .card-slot {
+  width: 100px;
+  height: 150px;
+  background-color: #256f66;
+  border: 2px solid #2a9d8f;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: left;
+  align-items: left;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
 
-  .card-row h1 {
-    color:#248a7e;
-    font-size: 36px;
-    align-items: center;
-  }
+.card-row h1 {
+  color:#248a7e;
+  font-size: 36px;
+  align-items: center;
+}
 
-  /* Card filler slot */
-  .card-row .card-filler {
-    width: 100px;
-    height: 150px;
-    background-color: #2a9d8f;
-    border: 2px solid #2a9d8f;
-    border-radius: 10px;
-    display: flex;
-    justify-content: left;
-    align-items: left;
-    position: relative;
-  }
+/* Card filler slot */
+.card-row .card-filler {
+  width: 100px;
+  height: 150px;
+  background-color: #2a9d8f;
+  border: 2px solid #2a9d8f;
+  border-radius: 10px;
+  display: flex;
+  justify-content: left;
+  align-items: left;
+  position: relative;
+}
 
 /* Card Stacking Container */
 .card-stack {
@@ -112,31 +127,31 @@ body {
   height: auto; 
 }
 
-  .card-stack .card {
-    position: absolute;
-    top: 0; 
-    left: 0; 
-    transform: translateY(calc(var(--card-index, 0) * 45px)); /* Adjust the height of the card based on its index*/
-    z-index: var(--card-index, 0); 
-    transition: transform 0.2s ease, z-index 0.2s ease; 
-  }
+.card-stack .card {
+  position: absolute;
+  top: 0; 
+  left: 0; 
+  transform: translateY(calc(var(--card-index, 0) * 45px)); /* Adjust the height of the card based on its index*/
+  z-index: var(--card-index, 0); 
+  transition: transform 0.2s ease, z-index 0.2s ease; 
+}
 
-  .card-stack .card:hover {
-    transform: scale(1.08) translateY(calc(var(--card-index, 0) * 45px)); /*Scale and adjust for position*/
-  }
+.card-stack .card:hover {
+  transform: scale(1.08) translateY(calc(var(--card-index, 0) * 45px)); /*Scale and adjust for position*/
+}
 
-  .home-button {
-    position: fixed;
-    top: 5px;
-    left: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-    z-index: 1000; 
-  }
+.home-button {
+  position: fixed;
+  margin-top: 0px;
+  margin-left: 1695px;
+  width: 168px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
