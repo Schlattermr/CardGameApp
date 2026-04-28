@@ -1,4 +1,6 @@
 using Backend.Services;
+using Backend.Models.Domain;
+using Backend.Models.Enums;
 
 namespace Test
 {

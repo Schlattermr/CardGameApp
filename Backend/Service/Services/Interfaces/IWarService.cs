@@ -1,8 +1,8 @@
 using Backend.Data.Entities;
 
-namespace Backend.Services;
+namespace Backend.Services.Interfaces;
 
-public interface IWarRules
+public interface IWarService
 {
     /// <summary>
     /// Forms the War board by separating cards into piles for each player

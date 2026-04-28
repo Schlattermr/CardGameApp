@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using Backend.Services;
+using Backend.Models.Domain;
 
 namespace Backend.Controllers
 {

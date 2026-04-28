@@ -4,7 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
-using Backend.Data;
+using Backend.Models.DTOs;
 using Backend.Repository;
 
 namespace Backend.Controllers;
@@ -16,8 +16,14 @@ public class AuthController : ControllerBase
     private readonly string _connectionString = DatabaseUtilities.CreateConnectionString();
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(Register dto)
+    public async Task<IActionResult> Register([FromBody] Register dto)
     {
+        if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
+        {
+            Console.WriteLine("[WARNING] Registration failed: Username or password is empty.");
+            return BadRequest("Username and password are required.");
+        }
+
         Console.WriteLine($"[INFO] Registration request received for username: {dto.Username}");
         try
         {
@@ -48,8 +54,14 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginDto dto)
+    public async Task<IActionResult> Login([FromBody] Login dto)
     {
+        if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
+        {
+            Console.WriteLine("[WARNING] Login failed: Username or password is empty.");
+            return BadRequest("Username and password are required.");
+        }
+
         Console.WriteLine($"[INFO] Login request received for username: {dto.Username}");
         try
         {
@@ -94,7 +106,7 @@ public class AuthController : ControllerBase
                 issuer: "procrastination-pastimes",
                 audience: "procrastination-pastimes",
                 claims: claims,
-                expires: DateTime.Now.AddHours(1),
+                expires: DateTime.UtcNow.AddHours(1),
                 signingCredentials: credentials
             );
 

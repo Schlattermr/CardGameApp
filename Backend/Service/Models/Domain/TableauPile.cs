@@ -1,12 +1,12 @@
-namespace Backend.Services;
+namespace Backend.Models.Domain;
 
-/*
- * Foundation pile index increments starting from King or the highest card, opposite of foundation pile
- * 0: King
- * 1: Queen
- * 2: Jack
- * etc.
- */
+/// <summary>
+/// Foundation pile index increments starting from King or the highest card, opposite of foundation pile
+/// 0: King
+/// 1: Queen
+/// 2: Jack
+/// etc.
+/// </summary>
 public class TableauPile : Pile, ITableauPile
 {
     public bool ValidatePile()

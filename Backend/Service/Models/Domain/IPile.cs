@@ -1,4 +1,4 @@
-namespace Backend.Services;
+namespace Backend.Models.Domain;
 
 public interface IPile
 {
@@ -7,7 +7,6 @@ public interface IPile
     /// </summary>
     /// <returns>Current size of a pile</returns>
     int Count();
-
 
     /// <summary>
     /// Returns properties of first card and helps determine valid moves
@@ -29,6 +28,5 @@ public interface IPile
     /// <summary>
     /// Finds the index of a given card in a pile
     /// </summary>
-    /// <returns> Index of a card, -1 otherwise</returns>
     int IndexCard(Card card);
 }

@@ -1,8 +1,8 @@
 using Backend.Models.Domain;
 
-namespace Backend.Services;
+namespace Backend.Services.Interfaces;
 
-public interface ISolitaireRules
+public interface ISolitaireService
 {
     /// <summary>
     /// Forms the Solitaire board by separating cards into tableau and foundation

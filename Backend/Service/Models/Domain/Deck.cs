@@ -1,4 +1,6 @@
-namespace Backend.Services;
+using Backend.Models.Enums;
+
+namespace Backend.Models.Domain;
 
 public class Deck : IDeck
 {
@@ -6,7 +8,7 @@ public class Deck : IDeck
 
     // Expose read-only view of the internal list
     public IReadOnlyList<Card> Cards => _cards.AsReadOnly();
-    
+
     // Public property for backward compatibility with tests
     public List<Card> cards
     {

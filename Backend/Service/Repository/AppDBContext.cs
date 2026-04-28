@@ -1,4 +1,4 @@
-using Backend.Models;
+using Backend.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repository

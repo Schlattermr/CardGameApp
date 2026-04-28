@@ -1,15 +1,16 @@
 using Backend.Data.Entities;
 using Backend.Models.Domain;
 using Backend.Models.Enums;
+using Backend.Services.Interfaces;
 
 namespace Backend.Services;
 
-public class WarRules : IWarRules
+public class WarService : IWarService
 {
     private readonly Deck deck;
     private User? player1, player2, player3, player4, player5, player6;
 
-    public WarRules()
+    public WarService()
     {
         deck = new Deck();
     }

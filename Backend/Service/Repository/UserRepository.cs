@@ -8,8 +8,9 @@ public static class UserRepository
 {
     /*
      *  Add a new user to database
+     *  Returns the number of rows affected (1 if successful, 0 if username already exists)
      */
-    public static async Task AddNewUserAsync(string username, string password, string connectionString) 
+    public static async Task<int> AddNewUserAsync(string username, string password, string connectionString) 
     {
         // Insert and check the username doesn't already exist
         var query = @"INSERT INTO Users (Username, PasswordHash) 
@@ -21,7 +22,7 @@ public static class UserRepository
             {"@PasswordHash", password}
         };
 
-        await DatabaseUtilities.ExecuteNonQueryAsync(query, parameters, connectionString);
+        return await DatabaseUtilities.ExecuteNonQueryAsync(query, parameters, connectionString);
     }
 
     /*

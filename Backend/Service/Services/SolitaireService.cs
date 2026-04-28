@@ -1,9 +1,10 @@
 using Backend.Models.Domain;
 using Backend.Models.Enums;
+using Backend.Services.Interfaces;
 
 namespace Backend.Services;
 
-public class SolitaireRules : ISolitaireRules
+public class SolitaireService : ISolitaireService
 {
     public Deck Deck { get; private set; } = new();
     public TableauPile Tableau1 { get; private set; } = new();

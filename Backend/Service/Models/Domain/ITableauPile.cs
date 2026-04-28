@@ -1,4 +1,4 @@
-namespace Backend.Services;
+namespace Backend.Models.Domain;
 
 public interface ITableauPile
 {
