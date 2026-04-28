@@ -1,46 +1,38 @@
 namespace Backend.Services;
 
-public class Pile() : IPile
+public class Pile : IPile
 {
-    public List<Card> cards = new List<Card>();
+    public List<Card> Cards { get; set; } = new();
+
+    // Provide lowercase alias for backward compatibility with tests
+    public List<Card> cards
+    {
+        get => Cards;
+        set => Cards = value ?? new();
+    }
 
     public int Count()
     {
-        return cards.Count;
+        return Cards.Count;
     }
 
     public Card? TopCard()
     {
-        try
-        {
-            return cards.First();
-        }
-        catch (ArgumentNullException) // If a pile is empty
-        {
-            return null;
-        }
+        return Cards.Count > 0 ? Cards[0] : null;
     }
 
     public Card? LastCard()
     {
-        try
-        {
-            return cards.Last();
-        }
-        catch (ArgumentNullException) // If a pile is empty
-        {
-            return null;
-        }
-
+        return Cards.Count > 0 ? Cards[^1] : null;
     }
 
     public bool IsEmpty()
     {
-        return cards.Count == 0;
+        return Cards.Count == 0;
     }
 
     public int IndexCard(Card card)
     {
-        return cards.IndexOf(card); // returns -1 if not found
+        return Cards.IndexOf(card); // returns -1 if not found
     }
 }

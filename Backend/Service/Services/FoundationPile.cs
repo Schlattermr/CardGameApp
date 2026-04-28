@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Backend.Services;
 
 /*
@@ -16,6 +13,6 @@ public class FoundationPile : Pile, IFoundationPile
 
     public bool IsComplete()
     {
-        return cards.Count() == 13;
+        return Cards.Count == 13;
     }
 }

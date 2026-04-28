@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Backend.Services;
-using System.Dynamic;
 
 namespace Backend.Models
 {
@@ -17,7 +16,7 @@ namespace Backend.Models
         public required string Username { get; set; }
 
         [Required]
-        [StringLength(255)] // Matches CHARACTER_MAXIMUM_LENGTH of PasswordHash column
+        [StringLength(255)]
         public required string PasswordHash { get; set; }
 
         public List<Card>? WarCards { get; set; }

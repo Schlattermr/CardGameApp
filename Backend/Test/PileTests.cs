@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Security.AccessControl;
 using Xunit;
@@ -37,7 +37,7 @@ namespace Test
             };
 
             // Act
-            tableauPile.cards.RemoveAt(0);
+            tableauPile.Cards.RemoveAt(0);
 
             // Assert
             Assert.Equal(tableauPile.TopCard(), card2);
@@ -59,7 +59,7 @@ namespace Test
             // Act
             var foundationPile = new FoundationPile
             {
-                cards = cards,
+                Cards = cards,
                 acceptedSuit = Suit.Clubs
             };
 
@@ -238,3 +238,4 @@ namespace Test
         }
     }
 }
+

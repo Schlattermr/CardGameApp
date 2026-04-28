@@ -1,13 +1,24 @@
-using System.Runtime.CompilerServices;
-using System;
-using System.Collections.Generic;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 namespace Backend.Services;
 
 public class Deck : IDeck
 {
-    public List<Card> cards = new List<Card>();
+    private List<Card> _cards = new();
+
+    // Expose read-only view of the internal list
+    public IReadOnlyList<Card> Cards => _cards.AsReadOnly();
+    
+    // Public property for backward compatibility with tests
+    public List<Card> cards
+    {
+        get => _cards;
+        set => _cards = value ?? new();
+    }
+
+    // Internal method to populate the deck (used for testing)
+    internal void SetCards(List<Card> cards)
+    {
+        _cards = cards;
+    }
 
     public List<Card> CreateDeck(GameType game)
     {
@@ -18,7 +29,7 @@ public class Deck : IDeck
         }
 
         // Reset deck
-        this.cards = new List<Card>();
+        _cards = new();
 
         // Array of suit names
         var suits = new[] { Suit.Hearts, Suit.Diamonds, Suit.Clubs, Suit.Spades };
@@ -28,10 +39,10 @@ public class Deck : IDeck
             for (var numberIndex = 1; numberIndex <= 13; numberIndex++)
             {
                 // Create a card for each number and suit
-                cards.Add(new Card
+                _cards.Add(new Card
                 {
                     CardNumber = (Number)numberIndex,
-                    CardSuit = suits[suitIndex], // Assign suit
+                    CardSuit = suits[suitIndex],
                     FacingUp = false,
                     Game = game
                 });
@@ -41,11 +52,11 @@ public class Deck : IDeck
         // Add two jokers for War
         if (game == GameType.War)
         {
-            cards.Add(new Card { CardNumber = (Number)14, CardSuit = Suit.Joker, FacingUp = false, Game = game });
-            cards.Add(new Card { CardNumber = (Number)14, CardSuit = Suit.Joker, FacingUp = false, Game = game });
+            _cards.Add(new Card { CardNumber = Number.Joker, CardSuit = Suit.Joker, FacingUp = false, Game = game });
+            _cards.Add(new Card { CardNumber = Number.Joker, CardSuit = Suit.Joker, FacingUp = false, Game = game });
         }
 
-        return cards;
+        return _cards;
     }
 
     public int CountJokers(List<Card> deck)
@@ -64,34 +75,31 @@ public class Deck : IDeck
 
     public List<Card> AddCardToDeck(List<Card> roundCards)
     {
-        foreach (var roundCard in roundCards)
-        {
-            this.cards.Add(roundCard);
-        }
-        return this.cards;
+        _cards.AddRange(roundCards);
+        return _cards;
     }
 
     public Card PullTopCard()
     {
-        if (this.cards.Count == 0)
+        if (_cards.Count == 0)
         {
             throw new InvalidOperationException("No Cards in Deck");
         }
 
-        var pulledCard = this.cards[0];    // Get the top card
-        this.cards.RemoveAt(0);      // Remove it from the deck
+        var pulledCard = _cards[0];
+        _cards.RemoveAt(0);
         return pulledCard;
     }
 
     public List<Card> Shuffle(List<Card> deck)
     {
-        if(deck.Count == 0)
+        if (deck.Count == 0)
         {
             throw new InvalidOperationException("No Cards in Deck");
         }
 
-        Random seed = new Random(); // creates a randomized seed to determine order
-        for(int i = deck.Count - 1; i > 0; --i)
+        var seed = new Random();
+        for (int i = deck.Count - 1; i > 0; --i)
         {
             int randomPosition = seed.Next(i + 1);
 

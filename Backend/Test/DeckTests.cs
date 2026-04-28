@@ -22,10 +22,10 @@ namespace Test
             var actualJokerCount = result.CountJokers(result.cards);
 
             // Assert
-            Assert.Equal(expectedCardCount, result.cards.Count);
+            Assert.Equal(expectedCardCount, result.Cards.Count);
             Assert.Equal(expectedJokerCount, actualJokerCount);
-            Assert.All(result.cards, card => Assert.False(card.FacingUp));
-            Assert.All(result.cards, card => Assert.Equal(GameType.Solitaire, card.Game));
+            Assert.All(result.Cards, card => Assert.False(card.FacingUp));
+            Assert.All(result.Cards, card => Assert.Equal(GameType.Solitaire, card.Game));
         }
 
         [Fact]
@@ -42,10 +42,10 @@ namespace Test
             var actualJokerCount = result.CountJokers(result.cards);
 
             // Assert
-            Assert.Equal(expectedCardCount, result.cards.Count);
+            Assert.Equal(expectedCardCount, result.Cards.Count);
             Assert.Equal(expectedJokerCount, actualJokerCount);
-            Assert.All(result.cards, card => Assert.False(card.FacingUp));
-            Assert.All(result.cards, card => Assert.Equal(GameType.War, card.Game));
+            Assert.All(result.Cards, card => Assert.False(card.FacingUp));
+            Assert.All(result.Cards, card => Assert.Equal(GameType.War, card.Game));
         }
 
         [Fact]
@@ -60,8 +60,8 @@ namespace Test
             result2.cards = cards2;
 
             // Assert
-            Assert.Empty(result.cards);
-            Assert.Empty(result2.cards);
+            Assert.Empty(result.Cards);
+            Assert.Empty(result2.Cards);
         }
 
         [Fact]
@@ -76,15 +76,13 @@ namespace Test
                 card2
             };
 
-            var deck = new Deck();
-
             // Act
             var result = new Deck();
             result.cards = result.AddCardToDeck(roundCards);
             
             // Assert
-            Assert.Equal(roundCards.Count, result.cards.Count);
-            Assert.Equal(roundCards, result.cards);
+            Assert.Equal(roundCards.Count, result.Cards.Count);
+            Assert.Equal(roundCards, result.Cards);
         }
 
         [Fact]
@@ -110,10 +108,10 @@ namespace Test
             result.cards = result.AddCardToDeck(roundCards);
 
             // Assert
-            Assert.Equal(3, result.cards.Count); // 1 initial card + 2 added cards
-            Assert.Equal(userCards[0], result.cards[0]);
-            Assert.Equal(roundCards[0], result.cards[1]);
-            Assert.Equal(roundCards[1], result.cards[2]);
+            Assert.Equal(3, result.Cards.Count); // 1 initial card + 2 added cards
+            Assert.Equal(userCards[0], result.Cards[0]);
+            Assert.Equal(roundCards[0], result.Cards[1]);
+            Assert.Equal(roundCards[1], result.Cards[2]);
         }
 
         [Fact]
@@ -127,7 +125,7 @@ namespace Test
             result.cards = result.AddCardToDeck(roundCards);
 
             // Assert
-            Assert.Empty(result.cards);
+            Assert.Empty(result.Cards);
         }
 
         [Fact]
@@ -149,16 +147,13 @@ namespace Test
 
             // Assert
             Assert.Equal(card1, pulledCard);                           // Verify the pulled card is the top card
-            Assert.True(result.cards.Count == 1);                                  // Verify only one card remains
-            Assert.Equal(Number.Five, result.cards[0].CardNumber); // Verify the next card is now the top card
+            Assert.True(result.Cards.Count == 1);                                  // Verify only one card remains
+            Assert.Equal(Number.Five, result.Cards[0].CardNumber); // Verify the next card is now the top card
         }
 
         [Fact]
         public void PullTopCard_FromEmptyDeck_ShouldThrowInvalidOperationException()
         {
-            // Arrange
-            var userCards = new List<Card>();
-
             // Act
             var result = new Deck();
             var exception = Assert.Throws<InvalidOperationException>(() => result.PullTopCard());
@@ -184,7 +179,7 @@ namespace Test
 
             // Assert
             Assert.Equal(lastCard, pulledCard); // Verify the pulled card is correct
-            Assert.Empty(result.cards); // Verify the deck is now empty
+            Assert.Empty(result.Cards); // Verify the deck is now empty
         }
 
         [Fact]

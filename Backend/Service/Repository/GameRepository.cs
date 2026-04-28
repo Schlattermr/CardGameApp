@@ -1,14 +1,15 @@
 namespace Backend.Repository;
+
 /* 
  *  Responsible for persisting and retrieving game states, such as 
  *  saved Solitaire games or current score and deck status in War.
  */ 
-public class GameAccessor
+public static class GameRepository
 {
     /*
      * Add a new game to the database
      */
-    public async Task<int> AddNewGameAsync(string gameName, string connectionString)
+    public static async Task<int> AddNewGameAsync(string gameName, string connectionString)
     {
         var query = "INSERT INTO Games (GameName) VALUES (@GameName); SELECT SCOPE_IDENTITY();";
         var parameters = new Dictionary<string, object>
@@ -31,7 +32,7 @@ public class GameAccessor
     /*
      * Function to get a game by GameId
      */
-    public async Task<Dictionary<string, object>?> GetGameByIdAsync(int gameId, string connectionString)
+    public static async Task<Dictionary<string, object>?> GetGameByIdAsync(int gameId, string connectionString)
     {
         var query = "SELECT * FROM Games WHERE GameId = @GameId";
         var parameters = new Dictionary<string, object>
@@ -42,18 +43,18 @@ public class GameAccessor
         var result = await DatabaseUtilities.ExecuteQueryAsync(query, parameters, connectionString);
         if (result.Count > 0)
         {
-            return result[0]; // Return the first result as it's expected to be unique
+            return result[0];
         } 
         else 
         {
-            return null; // Return null if no game was found
+            return null;
         }
     }
 
     /*
      * Get a game by GameName
      */
-    public async Task<Dictionary<string, object>?> GetGameByNameAsync(string gameName, string connectionString)
+    public static async Task<Dictionary<string, object>?> GetGameByNameAsync(string gameName, string connectionString)
     {
         var query = "SELECT * FROM Games WHERE GameName = @GameName";
         var parameters = new Dictionary<string, object>
@@ -64,11 +65,11 @@ public class GameAccessor
         var result = await DatabaseUtilities.ExecuteQueryAsync(query, parameters, connectionString);
         if (result.Count > 0)
         {
-            return result[0]; // Return the first result as it's expected to be unique
+            return result[0];
         }
         else
         {
-            return null;    // Return null if no game was found
+            return null;
         }
     }
 }

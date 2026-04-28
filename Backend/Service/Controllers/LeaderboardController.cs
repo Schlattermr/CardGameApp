@@ -1,22 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using Backend.Models;
 using Backend.Repository;
 
 namespace Backend.Controllers;
 
 [ApiController]
 [Route("api/leaderboard")]
-public class LeaderboardController : ControllerBase
+public class LeaderboardController() : ControllerBase
 {
-    private readonly LeaderboardAccessor _leaderboardAccessor;
-    private readonly string _connectionString;
-
-    public LeaderboardController(LeaderboardAccessor leaderboardAccessor)
-    {
-        _leaderboardAccessor = leaderboardAccessor;
-        _connectionString = DatabaseUtilities.CreateConnectionString();
-    }
+    private readonly string _connectionString = DatabaseUtilities.CreateConnectionString();
 
     [HttpGet("all/data")]
     public async Task<IActionResult> GetLeaderboardData()
@@ -24,7 +15,7 @@ public class LeaderboardController : ControllerBase
         try
         {
             // Get leaderboard usernames and wins in descending order
-            var leaderboardData = await _leaderboardAccessor.GrabLeaderboardDataAsync(_connectionString);
+            var leaderboardData = await LeaderboardRepository.GrabLeaderboardDataAsync(_connectionString);
             return Ok(leaderboardData);
         }
         catch (Exception e)
@@ -43,7 +34,7 @@ public class LeaderboardController : ControllerBase
 
         try
         {
-            var winsData = await _leaderboardAccessor.GrabUserWinsDataAsync(username, _connectionString);
+            var winsData = await LeaderboardRepository.GrabUserWinsDataAsync(username, _connectionString);
             if (winsData == null)
             {
                 return NotFound("User not found.");
@@ -69,7 +60,7 @@ public class LeaderboardController : ControllerBase
 
         try
         {
-            await _leaderboardAccessor.UpdateUserWinsAsync(request.Username, request.Wins, _connectionString);
+            await LeaderboardRepository.UpdateUserWinsAsync(request.Username, request.Wins, _connectionString);
 
             Console.WriteLine($"[INFO] Updated wins in leaderboard for user {request.Username}.");
             return Ok("Leaderboard wins updated successfully.");
@@ -84,6 +75,13 @@ public class LeaderboardController : ControllerBase
 
 public class UpdateLeaderboardRequest
 {
-    public required string Username { get; set; }
-    public int Wins { get; set; }
+    public required string Username 
+    { 
+        get; set; 
+    }
+
+    public required int Wins 
+    { 
+        get; set; 
+    }
 }

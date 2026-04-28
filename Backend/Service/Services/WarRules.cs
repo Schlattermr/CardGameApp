@@ -14,9 +14,8 @@ public class WarRules : IWarRules
 
     public void CreateWarGame(User p1, User p2, User p3, User p4, User p5, User p6)
     {
-        var cards = deck.CreateDeck(GameType.War);
-        var shuffledCards = deck.Shuffle(cards);
-        deck.cards = shuffledCards;
+        deck.CreateDeck(GameType.War);
+        deck.Shuffle(deck.Cards.ToList());
 
         player1 = p1;
         player2 = p2;
@@ -29,8 +28,7 @@ public class WarRules : IWarRules
     public void PlayWar()
     {
         var warDeck = new Deck();
-        var cards = warDeck.CreateDeck(GameType.War);
-        warDeck.cards = cards;
+        warDeck.CreateDeck(GameType.War);
 
         for (var i = 0; i < 54; i += 6)
         {
@@ -43,7 +41,7 @@ public class WarRules : IWarRules
         }
 
         List<User> players = new List<User> { player1!, player2!, player3!, player4!, player5!, player6! };
-        var roundWinner = GetWinner(players);
+        GetWinner(players);
     }
 
     public User GetWinner(List<User> players)

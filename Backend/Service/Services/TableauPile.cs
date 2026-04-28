@@ -15,19 +15,19 @@ public class TableauPile : Pile, ITableauPile
         var i = 0;
         do
         {
-            if (i >= cards.Count() - 1) // Doesn't have enough cards to compare against
+            if (i >= Cards.Count - 1) // Doesn't have enough cards to compare against
                 return true;
             else
             {
                 i++;
             }
-        } while ((!cards[i - 1].FacingUp || !cards[i].FacingUp));
+        } while ((!Cards[i - 1].FacingUp || !Cards[i].FacingUp));
 
 
-        while (i < cards.Count())
+        while (i < Cards.Count)
         {
-            if(!(cards[i - 1].IsBlack() ^ cards[i].IsBlack() &&  // Colors must alternate
-               Math.Abs(cards[i-1].CardNumber - cards[i].CardNumber) == 1)) // Card numbers must be sequential
+            if(!(Cards[i - 1].IsBlack() ^ Cards[i].IsBlack() &&  // Colors must alternate
+               Math.Abs(Cards[i-1].CardNumber - Cards[i].CardNumber) == 1)) // Card numbers must be sequential
             {
                 return false;
             }

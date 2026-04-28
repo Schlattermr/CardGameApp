@@ -22,9 +22,6 @@ builder.Services.AddDbContext<AppDBContext>(options =>
            .LogTo(Console.WriteLine);     // Logs raw SQL queries to the console.
 });
 
-// Register UserAccessor as a scoped service.
-builder.Services.AddScoped<UserAccessor>();
-builder.Services.AddScoped<LeaderboardAccessor>();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 // Add CORS policy to allow requests from React frontend.
@@ -53,4 +50,4 @@ app.UseHttpsRedirection(); // Redirect HTTP to HTTPS.
 app.UseAuthorization();    // Enable authorization for protected endpoints.
 app.MapControllers();      // Map API controllers to endpoints.
 
-app.Run(); // Run the application.
+await app.RunAsync(); // Run the application.

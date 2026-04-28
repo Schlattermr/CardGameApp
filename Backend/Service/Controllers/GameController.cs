@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Concurrent;
-using Backend.Models;
 using Backend.Managers;
-using Backend.Repository;
 using Backend.Services;
 
 namespace Backend.Controllers
@@ -14,6 +12,7 @@ namespace Backend.Controllers
         private static ConcurrentDictionary<string, bool> LoggedInUsers = new ConcurrentDictionary<string, bool>();
 
         [HttpGet("players")]
+        [ProducesResponseType(typeof(IEnumerable<object>), 200)]
         public IActionResult GetLoggedInPlayers()
         {
             var players = LoggedInUsers.Keys.Select(username => new { Username = username }).ToList();
@@ -21,6 +20,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("addPlayer")]
+        [ProducesResponseType(typeof(string), 200)]
         public IActionResult AddLoggedInPlayer([FromBody] string username)
         {
             if (string.IsNullOrWhiteSpace(username))
@@ -39,6 +39,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("initialize")]
+        [ProducesResponseType(typeof(Dictionary<string, List<Card>>), 200)]
         public IActionResult InitializeGame([FromBody] List<string> playerNames)
         {
             if (playerNames == null || playerNames.Count == 0)
@@ -47,8 +48,7 @@ namespace Backend.Controllers
             }
             try
             {
-                DeckManager deckManager = new DeckManager();
-                Dictionary<string, List<Card>> distributedDeck = deckManager.InitializeAndDistributeDeck(playerNames);
+                Dictionary<string, List<Card>> distributedDeck = DeckManager.InitializeAndDistributeDeck(playerNames);
 
                 return Ok(distributedDeck); 
             }
@@ -60,6 +60,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("reset")]
+        [ProducesResponseType(typeof(Dictionary<string, List<Card>>), 200)]
         public IActionResult ResetGame([FromBody] List<string> playerNames)
         {
             if (playerNames == null || playerNames.Count == 0)
@@ -69,8 +70,7 @@ namespace Backend.Controllers
 
             try
             {
-                DeckManager deckManager = new DeckManager();
-                Dictionary<string, List<Card>> newDeck = deckManager.InitializeAndDistributeDeck(playerNames);
+                Dictionary<string, List<Card>> newDeck = DeckManager.InitializeAndDistributeDeck(playerNames);
 
                 Console.WriteLine("[INFO] Game has been reset.");
                 return Ok(newDeck); 

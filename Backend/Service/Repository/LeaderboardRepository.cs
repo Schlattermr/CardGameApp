@@ -1,14 +1,15 @@
 namespace Backend.Repository;
+
 /*
  *   Responsible for persisting and retrieving leaderboard data, such as 
  *   user wins in solitaire and war.
  */
-public class LeaderboardAccessor
+public static class LeaderboardRepository
 {
     /*
      *  Updates wins in the leaderboard
      */
-    public async Task UpdateUserWinsAsync(string username, int wins, string connectionString)
+    public static async Task UpdateUserWinsAsync(string username, int wins, string connectionString)
     {
         wins++;
         var query = @"UPDATE Leaderboards SET Wins = @Wins 
@@ -27,7 +28,7 @@ public class LeaderboardAccessor
     /*
      *  Grabs user wins from username
      */
-    public async Task<List<Dictionary<string, object>>?> GrabUserWinsDataAsync(string username, string connectionString)
+    public static async Task<List<Dictionary<string, object>>?> GrabUserWinsDataAsync(string username, string connectionString)
     {
         var query = @"SELECT l.Wins FROM Leaderboards l
                       INNER JOIN Users u ON l.UserId = u.UserId
@@ -50,7 +51,7 @@ public class LeaderboardAccessor
     /*
      *  Grabs top 7 usernames and wins to use on leaderboard in frontend
      */
-    public async Task<List<Dictionary<string, object>>?> GrabLeaderboardDataAsync(string connectionString)
+    public static async Task<List<Dictionary<string, object>>?> GrabLeaderboardDataAsync(string connectionString)
     {
         var query = @"SELECT TOP 7 u.Username, l.Wins 
                       FROM Leaderboards l

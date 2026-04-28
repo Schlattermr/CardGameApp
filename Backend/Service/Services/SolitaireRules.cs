@@ -2,24 +2,25 @@ namespace Backend.Services;
 
 public class SolitaireRules : ISolitaireRules
 {
-    public Deck Deck = new Deck();
-    public TableauPile Tableau1 = new TableauPile(), 
-                          Tableau2 = new TableauPile(), 
-                          Tableau3 = new TableauPile(), 
-                          Tableau4 = new TableauPile(), 
-                          Tableau5 = new TableauPile(), 
-                          Tableau6 = new TableauPile(), 
-                          Tableau7 = new TableauPile();
-    public FoundationPile FoundationClubs = new FoundationPile(), 
-                             FoundationDiamonds = new FoundationPile(), 
-                             FoundationHearts = new FoundationPile(), 
-                             FoundationSpades = new FoundationPile();
-    public Pile Stock = new Pile(), 
-                Discard = new Pile(); // Can only select the discard's last card for play
+    public Deck Deck { get; private set; } = new();
+    public TableauPile Tableau1 { get; private set; } = new();
+    public TableauPile Tableau2 { get; private set; } = new();
+    public TableauPile Tableau3 { get; private set; } = new();
+    public TableauPile Tableau4 { get; private set; } = new();
+    public TableauPile Tableau5 { get; private set; } = new();
+    public TableauPile Tableau6 { get; private set; } = new();
+    public TableauPile Tableau7 { get; private set; } = new();
+    public FoundationPile FoundationClubs { get; private set; } = new();
+    public FoundationPile FoundationDiamonds { get; private set; } = new();
+    public FoundationPile FoundationHearts { get; private set; } = new();
+    public FoundationPile FoundationSpades { get; private set; } = new();
+    public Pile Stock { get; private set; } = new();
+    public Pile Discard { get; private set; } = new(); // Can only select the discard's last card for play
 
     public void CreateBoard()
     {
-        Deck.cards = Deck.Shuffle(Deck.CreateDeck(GameType.Solitaire));
+        // Use Deck's public API to obtain a List<Card> instead of accessing a non-existent 'cards' field.
+        List<Card> deckList = Deck.Shuffle(Deck.CreateDeck(GameType.Solitaire));
 
         List<FoundationPile> foundationPiles =
             [FoundationClubs, FoundationDiamonds, FoundationHearts, FoundationSpades];
@@ -28,10 +29,10 @@ public class SolitaireRules : ISolitaireRules
 
         // Assigns each foundation pile their suits and empty lists
         var i = 0;
-        foreach(FoundationPile pile in foundationPiles)
+        foreach (FoundationPile pile in foundationPiles)
         {
             pile.acceptedSuit = (Suit)i;
-            pile.cards = new List<Card>();
+            pile.Cards.Clear();
             i++;
         }
 
@@ -44,7 +45,7 @@ public class SolitaireRules : ISolitaireRules
             // Loop iterates 1, 2, 3, ..., 7 in subsequent foreach calls to give each tableau the correct amount
             for (var j = 0; j <= i; j++)
             {
-                pile.cards.Add(Deck.cards[index]);
+                pile.Cards.Add(deckList[index]);
                 index++;
             }
 
@@ -53,8 +54,9 @@ public class SolitaireRules : ISolitaireRules
         }
 
         // Assigns the stock the remaining cards
-        Stock.cards = Deck.cards.GetRange(index, 24);
-        Discard.cards = new List<Card>();
+        Stock.Cards.Clear();
+        Stock.Cards.AddRange(deckList.GetRange(index, deckList.Count - index));
+        Discard.Cards.Clear();
     }
 
     public void DrawFromStockpile()
@@ -64,18 +66,18 @@ public class SolitaireRules : ISolitaireRules
         {
             for (var i = 0; i < Discard.Count(); i++)
             {
-                Discard.cards[i].FacingUp = false;
-                Stock.cards.Add(Discard.cards[i]);
+                Discard.Cards[i].FacingUp = false;
+                Stock.Cards.Add(Discard.Cards[i]);
             }
 
-            Discard.cards.Clear();
+            Discard.Cards.Clear();
         }
         // Case: Stock is nonempty, move latest card to discard where it can then be used for play
         else
         {
             Stock.TopCard()!.FacingUp = true; // Nonempty piles won't have a null top card
-            Discard.cards.Add(Stock.TopCard()!);
-            Stock.cards.Remove(Stock.TopCard()!);
+            Discard.Cards.Add(Stock.TopCard()!);
+            Stock.Cards.Remove(Stock.TopCard()!);
         }
     }
 
@@ -84,8 +86,12 @@ public class SolitaireRules : ISolitaireRules
         int selectedIndex = chosenPile.IndexCard(selectedCard);
         if (selectedIndex != -1 && selectedCard.FacingUp) // The selected card is valid
         {
-            // Case: Moving a king into an empty tableau spot
-            if (selectedCard.CardNumber == Number.King && addingPile.IsEmpty())
+            var isValidMove = (selectedCard.CardNumber == Number.King && addingPile.IsEmpty()) ||
+                (!addingPile.IsEmpty() && addingPile.LastCard()!.FacingUp &&
+                 (selectedCard.IsBlack() ^ addingPile.LastCard()!.IsBlack()) && // Colors must alternate
+                 (Math.Abs(selectedCard.CardNumber - addingPile.LastCard()!.CardNumber) == 1)); // Difference must be 1
+
+            if (isValidMove)
             {
                 // Add all cards for a tableau
                 if (chosenPile.GetType() == typeof(TableauPile))
@@ -93,63 +99,35 @@ public class SolitaireRules : ISolitaireRules
                     var count = chosenPile.Count(); // Count must be evaluated once at the start, not during each loop iteration
                     for (var i = selectedIndex; i < count; i++)
                     {
-                        addingPile.cards.Add(chosenPile.cards[selectedIndex]);
-                        chosenPile.cards.RemoveAt(selectedIndex);
+                        addingPile.Cards.Add(chosenPile.Cards[selectedIndex]);
+                        chosenPile.Cards.RemoveAt(selectedIndex);
                     }
                 }
                 // Add only one card for a discard which must be the last
                 else if(chosenPile.LastCard() == selectedCard)
                 {
-                    addingPile.cards.Add(selectedCard);
-                    chosenPile.cards.Remove(selectedCard);
-                }
-
-            }
-            // Case: Normally moving a pile into another pile
-            else if (!addingPile.IsEmpty() && addingPile.LastCard()!.FacingUp &&
-                     (selectedCard.IsBlack() ^ addingPile.LastCard()!.IsBlack()) && // Colors must alternate
-                     (Math.Abs(selectedCard.CardNumber - addingPile.LastCard()!.CardNumber) == 1)) // Difference must be 1
-            {
-                if (chosenPile.GetType() == typeof(TableauPile))
-                {
-                    var count = chosenPile.Count();
-                    for (var i = selectedIndex; i < count; i++)
-                    {
-                        addingPile.cards.Add(chosenPile.cards[selectedIndex]);
-                        chosenPile.cards.RemoveAt(selectedIndex);
-                    }
-                }
-                else if (chosenPile.LastCard() == selectedCard)
-                {
-                    addingPile.cards.Add(selectedCard);
-                    chosenPile.cards.Remove(selectedCard);
+                    addingPile.Cards.Add(selectedCard);
+                    chosenPile.Cards.Remove(selectedCard);
                 }
             }
-
         }
-
     }
 
     public void MoveToFoundation(Card selectedCard, Pile chosenPile, FoundationPile addingPile)
     {
         if (chosenPile.IndexCard(selectedCard) != -1 && selectedCard.FacingUp) // The selected card is valid
         {
-            // Case: Moving an ace into an empty foundation spot
-            if (chosenPile.IndexCard(selectedCard) != -1 && addingPile.IsEmpty() &&
-                addingPile.acceptedSuit == selectedCard.CardSuit && selectedCard.CardNumber == Number.Ace)
-            {
-                addingPile.cards.Add(selectedCard);
-                chosenPile.cards.Remove(selectedCard);
-            }
-            // Case: Normally moving a card into a foundation
-            else if (addingPile.LastCard() != null && addingPile.acceptedSuit == selectedCard.CardSuit &&
+            var isValidMove = (chosenPile.IndexCard(selectedCard) != -1 && addingPile.IsEmpty() &&
+                addingPile.acceptedSuit == selectedCard.CardSuit && selectedCard.CardNumber == Number.Ace) ||
+                (addingPile.LastCard() != null && addingPile.acceptedSuit == selectedCard.CardSuit &&
                 Math.Abs(addingPile.LastCard()!.CardNumber - selectedCard.CardNumber) == 1 &&
-                selectedCard == chosenPile.LastCard()) // Verifies the selected card is the last card
-            {
-                addingPile.cards.Add(selectedCard);
-                chosenPile.cards.Remove(selectedCard);
-            }
+                selectedCard == chosenPile.LastCard()); // Verifies the selected card is the last card
 
+            if (isValidMove)
+            {
+                addingPile.Cards.Add(selectedCard);
+                chosenPile.Cards.Remove(selectedCard);
+            }
         }
     }
 

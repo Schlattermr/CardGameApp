@@ -2,9 +2,9 @@ using Backend.Services;
 
 namespace Backend.Managers
 {
-    public class DeckManager
+    public static class DeckManager
     {
-        public Dictionary<string, List<Card>> InitializeAndDistributeDeck(List<string> playerNames)
+        public static Dictionary<string, List<Card>> InitializeAndDistributeDeck(List<string> playerNames)
         {
             if (playerNames == null || playerNames.Count == 0)
             {

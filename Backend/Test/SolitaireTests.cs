@@ -1,4 +1,4 @@
-﻿using Backend.Services;
+using Backend.Services;
 
 namespace Test
 {
@@ -17,7 +17,7 @@ namespace Test
             }
             var foundationPile = new FoundationPile()
             {
-                cards = foundation,
+                Cards = foundation,
                 acceptedSuit = Suit.Clubs
             };
 
@@ -26,7 +26,7 @@ namespace Test
             tableau.Add(selectedCard);
             var tableauPile = new TableauPile()
             {
-                cards = tableau
+                Cards = tableau
             };
 
             // Act
@@ -34,7 +34,7 @@ namespace Test
 
             // Assert
             Assert.Empty(tableau);
-            Assert.Contains(selectedCard, foundationPile.cards);
+            Assert.Contains(selectedCard, foundationPile.Cards);
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace Test
             List<Card> foundation = [];
             var foundationPile = new FoundationPile()
             {
-                cards = foundation,
+                Cards = foundation,
                 acceptedSuit = Suit.Hearts
             };
 
@@ -55,7 +55,7 @@ namespace Test
             tableau.Add(selectedCard);
             var tableauPile = new TableauPile()
             {
-                cards = tableau
+                Cards = tableau
             };
 
             // Act
@@ -64,7 +64,7 @@ namespace Test
             // Assert
             Assert.Empty(tableau);
             Assert.NotEmpty(foundation);
-            Assert.Contains(selectedCard, foundationPile.cards);
+            Assert.Contains(selectedCard, foundationPile.Cards);
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace Test
             }
             var foundationPile = new FoundationPile()
             {
-                cards = foundation,
+                Cards = foundation,
                 acceptedSuit = Suit.Hearts
             };
 
@@ -89,7 +89,7 @@ namespace Test
             tableau.Add(selectedCard);
             var tableauPile = new TableauPile()
             {
-                cards = tableau
+                Cards = tableau
             };
 
             // Act
@@ -97,7 +97,7 @@ namespace Test
 
             // Assert
             Assert.NotEmpty(tableau);
-            Assert.DoesNotContain(selectedCard, foundationPile.cards);
+            Assert.DoesNotContain(selectedCard, foundationPile.Cards);
         }
 
         [Fact]
@@ -113,7 +113,7 @@ namespace Test
             }
             var foundationPile = new FoundationPile()
             {
-                cards = foundation,
+                Cards = foundation,
                 acceptedSuit = Suit.Hearts
             };
 
@@ -122,7 +122,7 @@ namespace Test
             tableau.Add(selectedCard);
             var tableauPile = new TableauPile()
             {
-                cards = tableau
+                Cards = tableau
             };
 
             // Act
@@ -130,7 +130,7 @@ namespace Test
 
             // Assert
             Assert.NotEmpty(tableau);
-            Assert.DoesNotContain(selectedCard, foundationPile.cards);
+            Assert.DoesNotContain(selectedCard, foundationPile.Cards);
         }
 
         [Fact]
@@ -146,7 +146,7 @@ namespace Test
             }
             var foundationPile = new FoundationPile()
             {
-                cards = foundation,
+                Cards = foundation,
                 acceptedSuit = Suit.Diamonds
             };
 
@@ -159,7 +159,7 @@ namespace Test
             ];
             var pile = new Pile()
             {
-                cards = cards
+                Cards = cards
             };
 
             // Act
@@ -167,7 +167,7 @@ namespace Test
 
             // Assert
             Assert.Equal(2, pile.Count());
-            Assert.DoesNotContain(selectedCard, foundationPile.cards);
+            Assert.DoesNotContain(selectedCard, foundationPile.Cards);
         }
 
         [Fact]
@@ -184,7 +184,7 @@ namespace Test
 
             var foundationPile = new FoundationPile()
             {
-                cards = foundation,
+                Cards = foundation,
                 acceptedSuit = Suit.Hearts
             };
 
@@ -193,7 +193,7 @@ namespace Test
             tableau.Add(selectedCard);
             var tableauPile = new TableauPile()
             {
-                cards = tableau
+                Cards = tableau
             };
 
             // Act
@@ -201,7 +201,7 @@ namespace Test
 
             // Assert
             Assert.NotEmpty(tableau);
-            Assert.DoesNotContain(selectedCard, foundationPile.cards);
+            Assert.DoesNotContain(selectedCard, foundationPile.Cards);
         }
 
         [Fact]
@@ -213,7 +213,7 @@ namespace Test
             List<Card> emptyTableau = [];
             var emptyTableauPile = new TableauPile()
             {
-                cards = emptyTableau
+                Cards = emptyTableau
             };
 
             List<Card> tableau = [];
@@ -221,7 +221,7 @@ namespace Test
             tableau.Add(selectedCard);
             var tableauPile = new TableauPile()
             {
-                cards = tableau
+                Cards = tableau
             };
 
             // Act
@@ -230,7 +230,7 @@ namespace Test
             // Assert
             Assert.False(emptyTableauPile.IsEmpty());
             Assert.True(tableauPile.IsEmpty());
-            Assert.Contains(selectedCard, emptyTableauPile.cards);
+            Assert.Contains(selectedCard, emptyTableauPile.Cards);
         }
 
         [Fact]
@@ -242,7 +242,7 @@ namespace Test
             List<Card> emptyTableau = [];
             var emptyTableauPile = new TableauPile()
             {
-                cards = emptyTableau
+                Cards = emptyTableau
             };
 
             var card1 = new Card { CardNumber = Number.King, CardSuit = Suit.Clubs, FacingUp = true, Game = GameType.Solitaire };
@@ -259,7 +259,7 @@ namespace Test
             ];
             var tableauPile = new TableauPile()
             {
-                cards = tableau
+                Cards = tableau
             };
 
             // Act
@@ -268,7 +268,7 @@ namespace Test
             // Assert
             Assert.Equal(0, tableauPile.Count());
             Assert.Equal(4, emptyTableauPile.Count());
-            Assert.Contains(card1, emptyTableauPile.cards);
+            Assert.Contains(card1, emptyTableauPile.Cards);
             Assert.True(tableauPile.ValidatePile());
         }
 
@@ -281,7 +281,7 @@ namespace Test
             List<Card> emptyTableau = [];
             var emptyTableauPile = new TableauPile()
             {
-                cards = emptyTableau
+                Cards = emptyTableau
             };
 
             var card1 = new Card { CardNumber = Number.Ace, CardSuit = Suit.Clubs, FacingUp = true, Game = GameType.Solitaire };
@@ -298,7 +298,7 @@ namespace Test
             ];
             var discard = new Pile()
             {
-                cards = cards
+                Cards = cards
             };
 
             // Act
@@ -307,7 +307,7 @@ namespace Test
             // Assert
             Assert.Equal(1, emptyTableauPile.Count());
             Assert.Equal(3, discard.Count());
-            Assert.Contains(card4, emptyTableauPile.cards);
+            Assert.Contains(card4, emptyTableauPile.Cards);
         }
 
         [Fact]
@@ -319,7 +319,7 @@ namespace Test
             List<Card> emptyTableau = [];
             var emptyTableauPile = new TableauPile()
             {
-                cards = emptyTableau
+                Cards = emptyTableau
             };
 
             var card1 = new Card { CardNumber = Number.King, CardSuit = Suit.Clubs, FacingUp = true, Game = GameType.Solitaire };
@@ -335,7 +335,7 @@ namespace Test
             ];
             var discard = new Pile()
             {
-                cards = cards
+                Cards = cards
             };
 
             // Act
@@ -355,7 +355,7 @@ namespace Test
             List<Card> emptyTableau = [];
             var emptyTableauPile = new TableauPile()
             {
-                cards = emptyTableau
+                Cards = emptyTableau
             };
 
             List<Card> tableau = [];
@@ -363,7 +363,7 @@ namespace Test
             tableau.Add(selectedCard);
             var tableauPile = new TableauPile()
             {
-                cards = tableau
+                Cards = tableau
             };
 
             // Act
@@ -372,7 +372,7 @@ namespace Test
             // Assert
             Assert.True(emptyTableauPile.IsEmpty());
             Assert.False(tableauPile.IsEmpty());
-            Assert.DoesNotContain(selectedCard, emptyTableauPile.cards);
+            Assert.DoesNotContain(selectedCard, emptyTableauPile.Cards);
         }
 
         [Fact]
@@ -388,7 +388,7 @@ namespace Test
             ];
             var chosenTableauPile = new TableauPile()
             {
-                cards = chosenTableau
+                Cards = chosenTableau
             };
 
             var card1 = new Card { CardNumber = Number.Jack, CardSuit = Suit.Clubs, FacingUp = true, Game = GameType.Solitaire };
@@ -402,7 +402,7 @@ namespace Test
             ];
             var addingTableauPile = new TableauPile()
             {
-                cards = addingTableau
+                Cards = addingTableau
             };
 
             // Act
@@ -431,7 +431,7 @@ namespace Test
             ];
             var chosenTableauPile = new TableauPile()
             {
-                cards = chosenTableau
+                Cards = chosenTableau
             };
 
             var card4 = new Card { CardNumber = Number.Jack, CardSuit = Suit.Clubs, FacingUp = true, Game = GameType.Solitaire };
@@ -445,7 +445,7 @@ namespace Test
             ];
             var addingTableauPile = new TableauPile()
             {
-                cards = addingTableau
+                Cards = addingTableau
             };
 
             // Act
@@ -476,7 +476,7 @@ namespace Test
             ];
             var chosenTableauPile = new TableauPile()
             {
-                cards = chosenTableau
+                Cards = chosenTableau
             };
 
             var card5 = new Card { CardNumber = Number.Four, CardSuit = Suit.Hearts, FacingUp = true, Game = GameType.Solitaire };
@@ -488,7 +488,7 @@ namespace Test
             ];
             var addingTableauPile = new TableauPile()
             {
-                cards = addingTableau
+                Cards = addingTableau
             };
 
             // Act
@@ -519,7 +519,7 @@ namespace Test
             ];
             var discard = new TableauPile()
             {
-                cards = cards
+                Cards = cards
             };
 
             var card5 = new Card { CardNumber = Number.Four, CardSuit = Suit.Spades, FacingUp = true, Game = GameType.Solitaire };
@@ -531,7 +531,7 @@ namespace Test
             ];
             var addingTableauPile = new TableauPile()
             {
-                cards = addingTableau
+                Cards = addingTableau
             };
 
             // Act
@@ -562,7 +562,7 @@ namespace Test
             ];
             var discard = new TableauPile()
             {
-                cards = cards
+                Cards = cards
             };
 
             var card5 = new Card { CardNumber = Number.Four, CardSuit = Suit.Spades, FacingUp = true, Game = GameType.Solitaire };
@@ -574,7 +574,7 @@ namespace Test
             ];
             var addingTableauPile = new TableauPile()
             {
-                cards = addingTableau
+                Cards = addingTableau
             };
 
             // Act
@@ -601,7 +601,7 @@ namespace Test
             ];
             var chosenTableauPile = new TableauPile()
             {
-                cards = chosenTableau
+                Cards = chosenTableau
             };
 
             var card1 = new Card { CardNumber = Number.Ten, CardSuit = Suit.Spades, FacingUp = true, Game = GameType.Solitaire };
@@ -615,7 +615,7 @@ namespace Test
             ];
             var addingTableauPile = new TableauPile()
             {
-                cards = addingTableau
+                Cards = addingTableau
             };
 
             // Act
@@ -633,7 +633,7 @@ namespace Test
             var testRules = new SolitaireRules();
 
             List<Card> stockCards = new List<Card>();
-            testRules.Stock.cards = stockCards;
+            testRules.Stock.Cards = stockCards;
 
             var card1 = new Card { CardNumber = Number.Four, CardSuit = Suit.Spades, FacingUp = true, Game = GameType.Solitaire };
             var card2 = new Card { CardNumber = Number.Ten, CardSuit = Suit.Hearts, FacingUp = true, Game = GameType.Solitaire };
@@ -644,7 +644,7 @@ namespace Test
                 card2,
                 card3
             ];
-            testRules.Discard.cards = discardCards;
+            testRules.Discard.Cards = discardCards;
 
             // Act
             testRules.DrawFromStockpile();
@@ -665,7 +665,7 @@ namespace Test
             [
                 card1
             ];
-            testRules.Stock.cards = stockCards;
+            testRules.Stock.Cards = stockCards;
 
             var card2 = new Card { CardNumber = Number.Four, CardSuit = Suit.Spades, FacingUp = true, Game = GameType.Solitaire };
             var card3 = new Card { CardNumber = Number.Ace, CardSuit = Suit.Spades, FacingUp = true, Game = GameType.Solitaire };
@@ -674,7 +674,7 @@ namespace Test
                 card2,
                 card3
             ];
-            testRules.Discard.cards = discardCards;
+            testRules.Discard.Cards = discardCards;
 
             // Act
             testRules.DrawFromStockpile();
@@ -692,10 +692,10 @@ namespace Test
             var testRules = new SolitaireRules();
 
             List<Card> stockCards = new List<Card>();
-            testRules.Stock.cards = stockCards;
+            testRules.Stock.Cards = stockCards;
 
             List<Card> discardCards = new List<Card>();
-            testRules.Discard.cards = discardCards;
+            testRules.Discard.Cards = discardCards;
 
             // Act
             testRules.DrawFromStockpile();
