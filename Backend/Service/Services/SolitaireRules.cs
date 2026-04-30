@@ -87,32 +87,40 @@ public class SolitaireRules : ISolitaireRules
     public void MoveToTableau(Card selectedCard, Pile chosenPile, TableauPile addingPile)
     {
         int selectedIndex = chosenPile.IndexCard(selectedCard);
-        if (selectedIndex != -1 && selectedCard.FacingUp) // The selected card is valid
+        if (selectedIndex == -1 || !selectedCard.FacingUp)
         {
-            var isValidMove = (selectedCard.CardNumber == Number.King && addingPile.IsEmpty()) ||
-                (!addingPile.IsEmpty() && addingPile.LastCard()!.FacingUp &&
-                 (selectedCard.IsBlack() ^ addingPile.LastCard()!.IsBlack()) && // Colors must alternate
-                 (Math.Abs(selectedCard.CardNumber - addingPile.LastCard()!.CardNumber) == 1)); // Difference must be 1
+            throw new InvalidOperationException("Invalid card selection: card not found or not facing up");
+        }
 
-            if (isValidMove)
+        var isValidMove = (selectedCard.CardNumber == Number.King && addingPile.IsEmpty()) ||
+            (!addingPile.IsEmpty() && addingPile.LastCard()!.FacingUp &&
+             (selectedCard.IsBlack() ^ addingPile.LastCard()!.IsBlack()) && // Colors must alternate
+             (Math.Abs(selectedCard.CardNumber - addingPile.LastCard()!.CardNumber) == 1)); // Difference must be 1
+
+        if (!isValidMove)
+        {
+            throw new InvalidOperationException("Invalid move: the card cannot be placed on the target pile");
+        }
+
+        // Add all cards for a tableau
+        if (chosenPile.GetType() == typeof(TableauPile))
+        {
+            var count = chosenPile.Count(); // Count must be evaluated once at the start, not during each loop iteration
+            for (var i = selectedIndex; i < count; i++)
             {
-                // Add all cards for a tableau
-                if (chosenPile.GetType() == typeof(TableauPile))
-                {
-                    var count = chosenPile.Count(); // Count must be evaluated once at the start, not during each loop iteration
-                    for (var i = selectedIndex; i < count; i++)
-                    {
-                        addingPile.Cards.Add(chosenPile.Cards[selectedIndex]);
-                        chosenPile.Cards.RemoveAt(selectedIndex);
-                    }
-                }
-                // Add only one card for a discard which must be the last
-                else if(chosenPile.LastCard() == selectedCard)
-                {
-                    addingPile.Cards.Add(selectedCard);
-                    chosenPile.Cards.Remove(selectedCard);
-                }
+                addingPile.Cards.Add(chosenPile.Cards[selectedIndex]);
+                chosenPile.Cards.RemoveAt(selectedIndex);
             }
+        }
+        // Add only one card for a discard which must be the last
+        else if(chosenPile.LastCard() == selectedCard)
+        {
+            addingPile.Cards.Add(selectedCard);
+            chosenPile.Cards.Remove(selectedCard);
+        }
+        else
+        {
+            throw new InvalidOperationException("Invalid move: can only move the last card from discard pile");
         }
     }
 
