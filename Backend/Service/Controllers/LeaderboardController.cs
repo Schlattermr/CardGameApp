@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Backend.Repository;
+using Backend.Models.DTOs;
 
 namespace Backend.Controllers;
 
@@ -70,18 +71,5 @@ public class LeaderboardController() : ControllerBase
             Console.WriteLine($"[ERROR] Failed to update wins in leaderboard: {ex.Message}");
             return StatusCode(500, "An error occurred while updating wins in the leaderboard.");
         }
-    }
-}
-
-public class UpdateLeaderboardRequest
-{
-    public required string Username 
-    { 
-        get; set; 
-    }
-
-    public required int Wins 
-    { 
-        get; set; 
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Backend.Controllers;
+using Backend.Models.DTOs;
 
 namespace Test
 {

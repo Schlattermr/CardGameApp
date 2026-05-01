@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 using Backend.Services;
-using Backend.Models.Domain;
+using Backend.Models.DTOs;
 
 namespace Backend.Controllers
 {
@@ -46,95 +45,6 @@ namespace Backend.Controllers
             {
                 return BadRequest($"Failed to move card: {ex.Message}");
             }
-        }
-    }
-
-    public class MoveCardRequest
-    {
-        [Required]
-        public required Card SelectedCard 
-        { 
-            get; set; 
-        }
-
-        [Required]
-        public required Pile SourcePile 
-        { 
-            get; set; 
-        }
-
-        [Required]
-        public required TableauPile TargetPile 
-        { 
-            get; set; 
-        }
-    }
-
-    public class MoveCardResponse
-    {
-        public required TableauPile Tableau1 
-        { 
-            get; set; 
-        }
-
-        public required TableauPile Tableau2 
-        { 
-            get; set; 
-        }
-
-        public required TableauPile Tableau3 
-        { 
-            get; set; 
-        }
-
-        public required TableauPile Tableau4 
-        { 
-            get; set; 
-        }
-
-        public required TableauPile Tableau5 
-        { 
-            get; set;
-        }
-
-        public required TableauPile Tableau6 
-        { 
-            get; set; 
-        }
-
-        public required TableauPile Tableau7 
-        { 
-            get; set; 
-        }
-
-        public required FoundationPile FoundationClubs 
-        { 
-            get; set;
-        }
-
-        public required FoundationPile FoundationDiamonds 
-        { 
-            get; set; 
-        }
-
-        public required FoundationPile FoundationHearts 
-        { 
-            get; set; 
-        }
-
-        public required FoundationPile FoundationSpades 
-        { 
-            get; set; 
-        }
-
-        public required Pile Stock 
-        { 
-            get; set; 
-        }
-
-        public required Pile Discard 
-        {
-                get; set; 
         }
     }
 }
