@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 using Backend.Services;
+using Backend.Models.Enums;
 
 namespace Test
 {

@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using Backend.Models;
+using Backend.Models.DTOs;
 using Backend.Repository;
 
 namespace Backend.Controllers;
@@ -66,10 +66,4 @@ public class LeaderboardController : ControllerBase
             return StatusCode(500, "An error occurred while updating wins in the leaderboard.");
         }
     }
-}
-
-public class UpdateLeaderboardRequest
-{
-    public required string Username { get; set; }
-    public int? Wins { get; set; }
 }

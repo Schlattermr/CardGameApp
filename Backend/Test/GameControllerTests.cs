@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Backend.Controllers;
-using Backend.Models.Domain;
+using Backend.Services;
 using System.Reflection;
 
 namespace Test

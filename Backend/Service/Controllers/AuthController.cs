@@ -4,7 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
-using Backend.Data;
+using Backend.Models.DTOs;
 using Backend.Repository;
 
 namespace Backend.Controllers;
@@ -48,7 +48,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginDto dto)
+    public async Task<IActionResult> Login(Login dto)
     {
         Console.WriteLine($"[INFO] Login request received for username: {dto.Username}");
         try
