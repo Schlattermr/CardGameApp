@@ -11,38 +11,31 @@ namespace Backend.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-public class AuthController(UserAccessor userAccessor) : ControllerBase
+public class AuthController : ControllerBase
 {
-    private readonly UserAccessor _userAccessor = userAccessor;
     private readonly string _connectionString = DatabaseUtilities.CreateConnectionString();
 
-    // Endpoint for user registration
     [HttpPost("register")]
     public async Task<IActionResult> Register(Register dto)
     {
         Console.WriteLine($"[INFO] Registration request received for username: {dto.Username}");
         try
         {
-            // Check if the username already exists
-            var existingUserId = await _userAccessor.GetUserIdAsync(dto.Username, _connectionString);
+            var existingUserId = await UserAccessor.GetUserIdAsync(dto.Username, _connectionString);
             if (existingUserId.HasValue)
             {
                 Console.WriteLine($"[WARNING] Registration failed: Username '{dto.Username}' already exists.");
                 return BadRequest("Username already exists.");
             }
 
-            // Check password with regex
             if (!Regex.IsMatch(dto.Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"))
             {
                 Console.WriteLine($"[WARNING] Registration failed: Password for username '{dto.Username}' does not meet requirements.");
                 return BadRequest("Password must be at least 8 characters long and contain one uppercase and one lowercase letter, one number, and one special character (@$!%*?&).");
             }
 
-            // Hash the password using bcrypt
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-
-            // Add user to database
-            await _userAccessor.AddNewUserAsync(dto.Username, hashedPassword, _connectionString);
+            await UserAccessor.AddNewUserAsync(dto.Username, hashedPassword, _connectionString);
 
             Console.WriteLine($"[INFO] User '{dto.Username}' registered successfully.");
             return Ok("User registered successfully.");
@@ -54,29 +47,26 @@ public class AuthController(UserAccessor userAccessor) : ControllerBase
         }
     }
 
-    // Endpoint for user login
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto dto)
     {
         Console.WriteLine($"[INFO] Login request received for username: {dto.Username}");
         try
         {
-            // Find the user by username
-            var userId = await _userAccessor.GetUserIdAsync(dto.Username, _connectionString);
+            var userId = await UserAccessor.GetUserIdAsync(dto.Username, _connectionString);
             if (!userId.HasValue)
             {
                 Console.WriteLine($"[WARNING] Login failed: Username '{dto.Username}' not found.");
                 return Unauthorized("Invalid username or password.");
             }
 
-            var passwordHash = await _userAccessor.GetPasswordHashAsync((int)userId, _connectionString);
+            var passwordHash = await UserAccessor.GetPasswordHashAsync((int)userId, _connectionString);
             if (string.IsNullOrEmpty(passwordHash))
             {
                 Console.WriteLine($"[ERROR] Password hash for user '{dto.Username}' is null or empty.");
                 return Unauthorized("Invalid username or password.");
             }
 
-            // Verify the password using bcrypt
             var isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password, passwordHash);
             if (!isPasswordValid)
             {
@@ -84,7 +74,6 @@ public class AuthController(UserAccessor userAccessor) : ControllerBase
                 return Unauthorized("Invalid username or password.");
             }
 
-            // Create a token if login is successful
             var jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
             if (string.IsNullOrEmpty(jwtSecretKey))
             {

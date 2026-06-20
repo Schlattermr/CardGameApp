@@ -1,11 +1,18 @@
 namespace Backend.Repository;
 
-public static class LeaderboardAccessor
+/*
+ *   Responsible for persisting and retrieving leaderboard data, such as 
+ *   user wins in solitaire and war.
+ */
+public static class LeaderboardRepository
 {
+    /*
+     *  Updates wins in the leaderboard
+     */
     public static async Task UpdateUserWinsAsync(string username, int wins, string connectionString)
     {
         wins++;
-        var query = @"UPDATE Leaderboards SET Wins = @Wins
+        var query = @"UPDATE Leaderboards SET Wins = @Wins 
                       FROM Leaderboards l
                       INNER JOIN Users u ON l.UserId = u.UserId
                       WHERE u.Username = @Username";
@@ -18,6 +25,9 @@ public static class LeaderboardAccessor
         await DatabaseUtilities.ExecuteNonQueryAsync(query, parameters, connectionString);
     }
 
+    /*
+     *  Grabs user wins from username
+     */
     public static async Task<List<Dictionary<string, object>>?> GrabUserWinsDataAsync(string username, string connectionString)
     {
         var query = @"SELECT l.Wins FROM Leaderboards l
@@ -28,17 +38,34 @@ public static class LeaderboardAccessor
             {"@Username", username}
         };
         var result = await DatabaseUtilities.ExecuteQueryAsync(query, parameters, connectionString);
-        return result.Count > 0 ? result : null;
+        if (result.Count > 0)
+        {
+            return result;
+        }
+        else
+        {
+            return null;    // Return null if no user was found
+        }
     }
 
+    /*
+     *  Grabs top 7 usernames and wins to use on leaderboard in frontend
+     */
     public static async Task<List<Dictionary<string, object>>?> GrabLeaderboardDataAsync(string connectionString)
     {
-        var query = @"SELECT TOP 7 u.Username, l.Wins
+        var query = @"SELECT TOP 7 u.Username, l.Wins 
                       FROM Leaderboards l
                       INNER JOIN Users u ON l.UserId = u.UserId
                       ORDER BY l.Wins DESC";
 
         var result = await DatabaseUtilities.ExecuteQueryAsync(query, null, connectionString);
-        return result.Count > 0 ? result : null;
+        if(result.Count > 0) 
+        {
+            return result;
+        }
+        else
+        {
+            return null;    // Return null if no user was found
+        }
     }
 }

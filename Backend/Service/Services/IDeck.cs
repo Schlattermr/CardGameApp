@@ -1,3 +1,5 @@
+using Backend.Models.Enums;
+
 namespace Backend.Services;
 
 public interface IDeck

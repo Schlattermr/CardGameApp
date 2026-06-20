@@ -9,22 +9,14 @@ namespace Backend.Controllers;
 [Route("api/leaderboard")]
 public class LeaderboardController : ControllerBase
 {
-    private readonly LeaderboardAccessor _leaderboardAccessor;
-    private readonly string _connectionString;
-
-    public LeaderboardController(LeaderboardAccessor leaderboardAccessor)
-    {
-        _leaderboardAccessor = leaderboardAccessor;
-        _connectionString = DatabaseUtilities.CreateConnectionString();
-    }
+    private readonly string _connectionString = DatabaseUtilities.CreateConnectionString();
 
     [HttpGet("all/data")]
     public async Task<IActionResult> GetLeaderboardData()
     {
         try
         {
-            // Get leaderboard usernames and wins in descending order
-            var leaderboardData = await _leaderboardAccessor.GrabLeaderboardDataAsync(_connectionString);
+            var leaderboardData = await LeaderboardAccessor.GrabLeaderboardDataAsync(_connectionString);
             return Ok(leaderboardData);
         }
         catch (Exception e)
@@ -37,17 +29,13 @@ public class LeaderboardController : ControllerBase
     public async Task<IActionResult> GetLeaderboardWins([FromQuery] string username)
     {
         if (string.IsNullOrEmpty(username))
-        {
             return BadRequest("Invalid request payload.");
-        }
 
         try
         {
-            var winsData = await _leaderboardAccessor.GrabUserWinsDataAsync(username, _connectionString);
+            var winsData = await LeaderboardAccessor.GrabUserWinsDataAsync(username, _connectionString);
             if (winsData == null)
-            {
                 return NotFound("User not found.");
-            }
 
             Console.WriteLine($"[INFO] Got wins from leaderboard for user {username}.");
             return Ok(winsData);
@@ -62,14 +50,12 @@ public class LeaderboardController : ControllerBase
     [HttpPost("update")]
     public async Task<IActionResult> UpdateLeaderboardWins([FromBody] UpdateLeaderboardRequest request)
     {
-        if (request == null || string.IsNullOrEmpty(request.Username) || request.Wins < 0)
-        {
+        if (request == null || string.IsNullOrEmpty(request.Username) || request.Wins == null || request.Wins < 0)
             return BadRequest("Invalid request payload.");
-        }
 
         try
         {
-            await _leaderboardAccessor.UpdateUserWinsAsync(request.Username, request.Wins, _connectionString);
+            await LeaderboardAccessor.UpdateUserWinsAsync(request.Username, request.Wins.Value, _connectionString);
 
             Console.WriteLine($"[INFO] Updated wins in leaderboard for user {request.Username}.");
             return Ok("Leaderboard wins updated successfully.");
@@ -85,5 +71,5 @@ public class LeaderboardController : ControllerBase
 public class UpdateLeaderboardRequest
 {
     public required string Username { get; set; }
-    public int Wins { get; set; }
+    public int? Wins { get; set; }
 }

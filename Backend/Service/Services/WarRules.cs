@@ -1,4 +1,5 @@
 using Backend.Models;
+using Backend.Models.Enums;
 
 namespace Backend.Services;
 
@@ -16,7 +17,7 @@ public class WarRules : IWarRules
     {
         var cards = deck.CreateDeck(GameType.War);
         var shuffledCards = deck.Shuffle(cards);
-        deck.cards = shuffledCards;
+        deck.Cards = shuffledCards;
 
         player1 = p1;
         player2 = p2;
@@ -30,7 +31,7 @@ public class WarRules : IWarRules
     {
         var warDeck = new Deck();
         var cards = warDeck.CreateDeck(GameType.War);
-        warDeck.cards = cards;
+        warDeck.Cards = cards;
 
         for (var i = 0; i < 54; i += 6)
         {
@@ -43,7 +44,7 @@ public class WarRules : IWarRules
         }
 
         List<User> players = new List<User> { player1!, player2!, player3!, player4!, player5!, player6! };
-        var roundWinner = GetWinner(players);
+        GetWinner(players);
     }
 
     public User GetWinner(List<User> players)

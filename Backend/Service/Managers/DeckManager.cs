@@ -1,15 +1,14 @@
 using Backend.Services;
+using Backend.Models.Enums;
 
 namespace Backend.Managers
 {
-    public class DeckManager
+    public static class DeckManager
     {
-        public Dictionary<string, List<Card>> InitializeAndDistributeDeck(List<string> playerNames)
+        public static Dictionary<string, List<Card>> InitializeAndDistributeDeck(List<string> playerNames)
         {
             if (playerNames == null || playerNames.Count == 0)
-            {
                 throw new ArgumentException("Player names cannot be null or empty.");
-            }
 
             Deck deck = new Deck();
             List<Card> shuffledDeck = deck.Shuffle(deck.CreateDeck(GameType.War));

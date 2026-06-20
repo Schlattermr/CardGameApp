@@ -1,268 +1,321 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import * as signalR from "@microsoft/signalr";
 import "../styles/WarGame.css";
+
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5013";
 
-const WarGame = () => {
-  const [players, setPlayers] = useState([]);
-  const [roundWinner, setRoundWinner] = useState("");
-  const [allRevealed, setAllRevealed] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
-  const [finalWinner, setFinalWinner] = useState(""); 
-
-  const getCardImage = (cardNumber, cardSuit) => {
-    const suitNames = ['C', 'D', 'H', 'S']; 
-    const cardNumberNames = [
-      'A', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'Q', 'K' // 0 is for 10
-    ];
-
-    if (cardNumber === 14) { // Joker image from web
-      return 'https://imgs.search.brave.com/dj6Wo1AUZXzlqN_smDDVScCdyjzZHdH4g7_aRCjoqe4/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDU4/OTQ1OTcxL3Bob3Rv/L2pva2VyLW9sZC1w/bGF5aW5nLWNhcmQt/ZnJvbS0xOTQwcy5q/cGc_cz02MTJ4NjEy/Jnc9MCZrPTIwJmM9/eDBJWmlNbU12ME5G/ZkNZbjJLdXZLRnRN/b0hkem5Wb1lWQ2dr/QzRlVUtpcz0'; 
-    }
-  
-    const suitName = suitNames[cardSuit];
-    const cardNumberName = cardNumberNames[cardNumber - 1];
-  
-    return `https://deckofcardsapi.com/static/img/${cardNumberName}${suitName}.png`;
-  };
-
-  const fetchPlayers = async () => {
-    console.log("Fetching players...");
-    try {
-        const response = await fetch(`${API_URL}/api/game/players`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setPlayers(
-          data.map((player) => ({
-            name: player.username,
-            score: 0,
-            hand: [], 
-          }))
-        );
-        console.log("Players loaded:", data);
-      } else {
-        console.error("Failed to fetch players:", response.statusText);
-      }
-    } catch (err) {
-      console.error("Error fetching players:", err);
-    }
-  };
-
-  const initializeGame = async () => {
-    console.log("Initializing game...");
-    try {
-        const response = await fetch(`${API_URL}/api/game/initialize`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(players.map((player) => player.name)), 
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Game initialized. Distributed deck:", data);
-
-        setPlayers((prevPlayers) =>
-          prevPlayers.map((player) => ({
-            ...player,
-            hand: data[player.name], 
-          }))
-        );
-      } else {
-        console.error("Failed to initialize game:", response.statusText);
-      }
-    } catch (err) {
-      console.error("Error initializing game:", err);
-    }
-  };
-
-const playRound = () => {
-  console.log("Playing round...");
-  if (players.every((player) => player.hand.length === 0)) {
-    console.log("Game over! No cards left.");
-    setRoundWinner("Game Over");
-    setGameOver(true); 
-    determineFinalWinner();
-    return;
-  }
-
-  const playedCards = players
-    .filter((player) => player.hand.length > 0) 
-    .map((player) => player.hand[0]);
-
-  const winningCard = playedCards.reduce((highest, card, idx) => {
- 
-    if (!highest || card.cardNumber > highest.card.cardNumber) {
-      return { card, playerIndex: idx };
-    }
-  
-    if (card.cardNumber === highest.card.cardNumber) {
-      const suitRank = [ 'C', 'D', 'H', 'S' ]; 
-      const currentCardSuitIndex = suitRank.indexOf(card.cardSuit);
-      const highestCardSuitIndex = suitRank.indexOf(highest.card.cardSuit);
-      if (currentCardSuitIndex > highestCardSuitIndex) {
-        return { card, playerIndex: idx };
-      }
-    }
-    return highest;
-  }, null);
-
-  const winnerName = players[winningCard.playerIndex].name;
-  console.log(`${winnerName} wins the round!`);
-
-  setPlayers((prevPlayers) =>
-    prevPlayers.map((player, idx) => ({
-      ...player,
-      hand: player.hand, 
-      score: idx === winningCard.playerIndex ? player.score + 1 : player.score, 
-    }))
-  );
-
-  setRoundWinner(`${winnerName} won this round!`);
-  setAllRevealed(true);
+const getCardImage = (cardNumber, cardSuit) => {
+  if (cardNumber === 14) return "https://deckofcardsapi.com/static/img/X1.png";
+  const suitNames = ["C", "D", "H", "S"];
+  const cardNumberNames = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "0", "J", "Q", "K"];
+  return `https://deckofcardsapi.com/static/img/${cardNumberNames[cardNumber - 1]}${suitNames[cardSuit]}.png`;
 };
 
-  const resetGame = () => {
-    console.log("Resetting entire game...");
-    setPlayers([]);
-    setRoundWinner("");
-    setFinalWinner(""); 
-    setAllRevealed(false);
-    setGameOver(false); 
-    fetchPlayers().then(() => initializeGame(true)); 
-  };
+const getCardName = (cardNumber, cardSuit) => {
+  if (cardNumber === 14) return "Joker";
+  const numbers = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
+  const suits = ["Clubs", "Diamonds", "Hearts", "Spades"];
+  return `${numbers[cardNumber - 1]} of ${suits[cardSuit]}`;
+};
 
-  const continueGame = () => {
-    console.log("Continuing the game...");
-    setRoundWinner(""); 
-    setAllRevealed(false); 
+const WarGame = () => {
+  const navigate = useNavigate();
 
-    setPlayers((prevPlayers) =>
-      prevPlayers.map((player) => ({
-        ...player,
-        hand: player.hand.length > 1 ? player.hand.slice(1) : [], 
-        score: player.score, 
-      }))
-    );
-  };
+  const [phase, setPhase] = useState("connecting");
+  const [myUsername, setMyUsername] = useState("");
+  const [opponentUsername, setOpponentUsername] = useState("");
+  const [myCardCount, setMyCardCount] = useState(0);
+  const [opponentCardCount, setOpponentCardCount] = useState(0);
+  const [myScore, setMyScore] = useState(0);
+  const [opponentScore, setOpponentScore] = useState(0);
+  const [myCard, setMyCard] = useState(null);
+  const [opponentCard, setOpponentCard] = useState(null);
+  const [roundWinner, setRoundWinner] = useState(null);
+  const [gameWinner, setGameWinner] = useState(null);
+  const [roundHistory, setRoundHistory] = useState([]);
+  const [iHaveFlipped, setIHaveFlipped] = useState(false);
+  const [opponentHasFlipped, setOpponentHasFlipped] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const determineFinalWinner = () => {
-    const highestScorer = players.reduce(
-      (highest, player) =>
-        !highest || player.score > highest.score ? player : highest,
-      null
-    );
+  const connectionRef = useRef(null);
+  const roundNumberRef = useRef(1);
 
-    if (highestScorer) {
-      console.log(`${highestScorer.name} is the winner with ${highestScorer.score} points!`);
-      setFinalWinner(`${highestScorer.name} is the winner with ${highestScorer.score} points!`);
-    }
-    updateLeaderboard(highestScorer.name);
-  };
-
-  const getUserWins = async (username) => {
-    try {
-        const response = await fetch(`${API_URL }/api/leaderboard/wins?username=${username}`, {
-        method: 'GET',
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        console.log("User data loaded:", data);
-        return data[0].Wins;
-      } else {
-        console.error("Failed to fetch user wins:", response.statusText);
-        return null;
-      }
-    } catch (e) {
-      console.error("Error fetching user wins:", e);
-      return null;
-    }
-  };
-
-  const updateLeaderboard = async (username) => {
-    const wins = await getUserWins(username);
-    console.log("Updating leaderboard for", username, "with", wins, "wins.");
-
-    const requestPayload = {
-      username: username,
-      wins:  wins != null ? wins : 0
-    };
-
-    try {
-      const response = await fetch(`${API_URL}/api/leaderboard/update`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestPayload)
-      });
-
-      if (response.ok) {
-        console.log("Leaderboard updated successfully.");
-      } else {
-        console.error("Failed to update leaderboard:", response.statusText);
-      }
-    } catch (error) {
-      console.error('An error occurred while updating the leaderboard:', error);
-    }
-  };
-  
   useEffect(() => {
-    fetchPlayers(); 
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl(`${API_URL}/wargamehub`)
+      .withAutomaticReconnect()
+      .build();
+
+    connection.on("WaitingForOpponent", () => {
+      setPhase("waiting");
+    });
+
+    connection.on("GameStarted", (data) => {
+      setMyUsername(data.yourUsername);
+      setOpponentUsername(data.opponentUsername);
+      setMyCardCount(data.yourCardCount);
+      setOpponentCardCount(data.opponentCardCount);
+      setMyScore(0);
+      setOpponentScore(0);
+      setMyCard(null);
+      setOpponentCard(null);
+      setRoundWinner(null);
+      setIHaveFlipped(false);
+      setOpponentHasFlipped(false);
+      roundNumberRef.current = 1;
+      setPhase("playing");
+    });
+
+    connection.on("OpponentFlipped", () => {
+      setOpponentHasFlipped(true);
+    });
+
+    connection.on("RoundResult", (data) => {
+      setMyCard(data.myCard);
+      setOpponentCard(data.opponentCard);
+      setMyCardCount(data.myCardsRemaining);
+      setOpponentCardCount(data.opponentCardsRemaining);
+      setMyScore(data.myScore);
+      setOpponentScore(data.opponentScore);
+      setRoundWinner(data.roundWinner);
+
+      setRoundHistory((prev) => [
+        ...prev,
+        {
+          round: roundNumberRef.current,
+          winner: data.roundWinner,
+          myCard: data.myCard,
+          opponentCard: data.opponentCard,
+        },
+      ]);
+
+      setPhase("result");
+
+      setTimeout(() => {
+        setIHaveFlipped(false);
+        setOpponentHasFlipped(false);
+        setMyCard(null);
+        setOpponentCard(null);
+        setRoundWinner(null);
+        roundNumberRef.current += 1;
+        setPhase("playing");
+      }, 2500);
+    });
+
+    connection.on("GameOver", (data) => {
+      setGameWinner(data.winner);
+      setMyScore(data.myScore);
+      setOpponentScore(data.opponentScore);
+      setPhase("gameover");
+    });
+
+    connection.on("OpponentDisconnected", () => {
+      setPhase("disconnected");
+    });
+
+    connection.on("GameFull", () => {
+      setErrorMsg("Game is already in progress. Try again later.");
+    });
+
+    connectionRef.current = connection;
+
+    connection
+      .start()
+      .then(() => {
+        const username = localStorage.getItem("username") || "Player";
+        setMyUsername(username);
+        connection.invoke("JoinGame", username);
+      })
+      .catch(() => setErrorMsg("Could not connect to server."));
+
+    return () => {
+      connection.stop();
+    };
   }, []);
 
-  const navigateToHome = () => {
-    window.location.href = "/"; 
+  const handleFlip = () => {
+    if (iHaveFlipped || phase !== "playing") return;
+    setIHaveFlipped(true);
+    connectionRef.current?.invoke("FlipCard");
+  };
+
+  const handlePlayAgain = () => {
+    setRoundHistory([]);
+    roundNumberRef.current = 1;
+    setMyScore(0);
+    setOpponentScore(0);
+    setGameWinner(null);
+    connectionRef.current?.invoke("PlayAgain");
   };
 
   return (
     <div className="war-game">
-      {/* Button to navigate back to homepage */}
-      <button className="home-button" onClick={() => { navigateToHome(); }}>Go to Homepage</button>
-      <div className="player-section">
-        {players.map((player, index) => (
-          <div key={index} className="player">
-            <h2>{player.name}</h2>
-            <p>Score: {player.score}</p>
-            <p>Cards Remaining: {player.hand.length}</p>
-            <div className="card">
-              {/* Display the top card image */}
-              {player.hand.length > 0 ? (
-                <img
-                  src={getCardImage(player.hand[0].cardNumber, player.hand[0].cardSuit)}
-                  alt={`Card: ${player.hand[0].cardNumber} of ${player.hand[0].cardSuit}`}
-                  className="card-image"
-                  draggable="false"
-                />
-              ) : (
-                <p>No Cards</p>
+      <button className="home-button" onClick={() => navigate("/")}>
+        Go to Homepage
+      </button>
+
+      {phase === "connecting" && (
+        <div className="overlay">
+          <p>Connecting...</p>
+        </div>
+      )}
+
+      {phase === "waiting" && (
+        <div className="overlay">
+          <p>Waiting for opponent...</p>
+        </div>
+      )}
+
+      {phase === "disconnected" && (
+        <div className="overlay">
+          <p>Opponent disconnected.</p>
+          <button onClick={() => window.location.reload()}>Play Again</button>
+        </div>
+      )}
+
+      {errorMsg && (
+        <div className="overlay error">
+          <p>{errorMsg}</p>
+        </div>
+      )}
+
+      {phase === "gameover" && (
+        <div className="overlay">
+          <div className="gameover-box">
+            <h2>{gameWinner === "me" ? "🏆 You Win!" : "You Lose"}</h2>
+            <p>
+              {myScore} – {opponentScore}
+            </p>
+            <button onClick={handlePlayAgain}>Play Again</button>
+            <button onClick={() => navigate("/")}>Home</button>
+          </div>
+        </div>
+      )}
+
+      {["playing", "flipping", "result"].includes(phase) && (
+        <>
+          <div className="score-bar">
+            <span>
+              {opponentUsername}: {opponentScore}
+            </span>
+            <span>vs</span>
+            <span>
+              {myUsername}: {myScore}
+            </span>
+          </div>
+
+          <div className="player-area opponent-area">
+            <div className="player-label">
+              {opponentUsername} — {opponentCardCount} cards
+            </div>
+            <div
+              className={`war-card ${
+                opponentHasFlipped && phase !== "result" ? "flipped" : ""
+              }`}
+            >
+              <img
+                src={
+                  opponentCard
+                    ? getCardImage(opponentCard.cardNumber, opponentCard.cardSuit)
+                    : "https://deckofcardsapi.com/static/img/back.png"
+                }
+                alt={
+                  opponentCard
+                    ? getCardName(opponentCard.cardNumber, opponentCard.cardSuit)
+                    : "Card Back"
+                }
+                draggable="false"
+              />
+              {opponentHasFlipped && !opponentCard && (
+                <div className="flip-indicator">Flipped!</div>
               )}
             </div>
           </div>
-        ))}
-      </div>
 
-      <div className="game-board">
-        {roundWinner && <p className="round-result">{roundWinner}</p>}
-        {gameOver && finalWinner && (
-          <p className="round-result">{finalWinner}</p>
-        )}
-      </div>
+          {phase === "result" && (
+            <div
+              className={`round-banner ${
+                roundWinner === "me"
+                  ? "win"
+                  : roundWinner === "opponent"
+                  ? "lose"
+                  : "tie"
+              }`}
+            >
+              {roundWinner === "me"
+                ? "You win this round!"
+                : roundWinner === "opponent"
+                ? "Opponent wins this round!"
+                : "Tie!"}
+            </div>
+          )}
 
-      <div className="game-controls">
-        {players.length === 0 ? (
-          <button onClick={fetchPlayers}>Fetch Players</button>
-        ) : gameOver ? (
-          <button onClick={resetGame}>Reset Game</button>
-        ) : allRevealed ? (
-          <button onClick={continueGame}>Continue Game</button>
-        ) : (
-          <button onClick={playRound}>Play Round</button>
-        )}
-      </div>
+          <div className="player-area my-area">
+            <div className={`war-card ${iHaveFlipped ? "flipped" : ""}`}>
+              <img
+                src={
+                  myCard
+                    ? getCardImage(myCard.cardNumber, myCard.cardSuit)
+                    : "https://deckofcardsapi.com/static/img/back.png"
+                }
+                alt={
+                  myCard
+                    ? getCardName(myCard.cardNumber, myCard.cardSuit)
+                    : "Card Back"
+                }
+                draggable="false"
+              />
+            </div>
+            <div className="player-label">
+              {myUsername} — {myCardCount} cards
+            </div>
+            <button
+              className="flip-button"
+              onClick={handleFlip}
+              disabled={iHaveFlipped || phase !== "playing"}
+            >
+              {iHaveFlipped ? "Waiting..." : "Flip!"}
+            </button>
+          </div>
+
+          <div className="round-history">
+            <h4>Round History</h4>
+            <ul>
+              {[...roundHistory]
+                .reverse()
+                .slice(0, 8)
+                .map((r, i) => (
+                  <li
+                    key={i}
+                    className={
+                      r.winner === "me"
+                        ? "win"
+                        : r.winner === "opponent"
+                        ? "lose"
+                        : "tie"
+                    }
+                  >
+                    R{r.round}:{" "}
+                    {r.winner === "me"
+                      ? "You"
+                      : r.winner === "opponent"
+                      ? opponentUsername
+                      : "Tie"}
+                    {r.myCard &&
+                      ` (${getCardName(
+                        r.myCard.cardNumber,
+                        r.myCard.cardSuit
+                      )} vs ${getCardName(
+                        r.opponentCard.cardNumber,
+                        r.opponentCard.cardSuit
+                      )})`}
+                  </li>
+                ))}
+            </ul>
+          </div>
+        </>
+      )}
     </div>
   );
 };

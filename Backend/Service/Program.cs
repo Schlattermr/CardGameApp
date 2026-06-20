@@ -1,14 +1,9 @@
-using Backend.Repository;
+using Backend.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers();
-
-// Register UserAccessor as a scoped service.
-builder.Services.AddScoped<UserAccessor>();
-builder.Services.AddScoped<LeaderboardAccessor>();
-builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+builder.Services.AddSignalR();
 
 // Add CORS policy to allow requests from React frontend.
 builder.Services.AddCors(options =>
@@ -17,7 +12,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:3000")
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
@@ -30,5 +26,6 @@ app.UseCors("AllowReactApp");
 app.UseHttpsRedirection(); // Redirect HTTP to HTTPS.
 app.UseAuthorization();    // Enable authorization for protected endpoints.
 app.MapControllers();      // Map API controllers to endpoints.
+app.MapHub<WarGameHub>("/wargamehub");
 
-app.Run(); // Run the application.
+await app.RunAsync();

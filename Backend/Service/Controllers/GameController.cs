@@ -47,8 +47,7 @@ namespace Backend.Controllers
             }
             try
             {
-                DeckManager deckManager = new DeckManager();
-                Dictionary<string, List<Card>> distributedDeck = deckManager.InitializeAndDistributeDeck(playerNames);
+                Dictionary<string, List<Card>> distributedDeck = DeckManager.InitializeAndDistributeDeck(playerNames);
 
                 return Ok(distributedDeck); 
             }
@@ -69,8 +68,7 @@ namespace Backend.Controllers
 
             try
             {
-                DeckManager deckManager = new DeckManager();
-                Dictionary<string, List<Card>> newDeck = deckManager.InitializeAndDistributeDeck(playerNames);
+                Dictionary<string, List<Card>> newDeck = DeckManager.InitializeAndDistributeDeck(playerNames);
 
                 Console.WriteLine("[INFO] Game has been reset.");
                 return Ok(newDeck); 
