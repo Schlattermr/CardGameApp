@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5013";
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState("");
@@ -12,8 +13,17 @@ const Login = ({ onLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!username.trim()) {
+      setMessage("Username cannot be blank.");
+      return;
+    }
+    if (!password) {
+      setMessage("Password cannot be blank.");
+      return;
+    }
+
     try {
-      const response = await fetch("http://localhost:5013/api/auth/login", {
+        const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -31,11 +41,12 @@ const Login = ({ onLogin }) => {
 
         setIsFading(true);
 
-        setTimeout(() => { // Redirect login to homepage after 1 second, not waiting-room
-          if(window.location.href === "http://localhost:3000/login") {
-            navigate("/homepage");
-          }
+        setTimeout(() => {
+          navigate("/homepage");
         }, 800);
+      } else {
+        const errorText = await response.text();
+        setMessage(errorText || "Login failed.");
       }
     } catch (e) {
       setMessage("An error occurred. Please try again.");

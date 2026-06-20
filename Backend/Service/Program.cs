@@ -1,26 +1,9 @@
-using Microsoft.EntityFrameworkCore;
 using Backend.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-
-// Configure the database context with the connection string.
-builder.Services.AddDbContext<AppDBContext>(options =>
-{
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    if (string.IsNullOrEmpty(connectionString))
-    {
-        Console.WriteLine("[ERROR] Connection string 'DefaultConnection' is not configured.");
-        throw new InvalidOperationException("Connection string 'DefaultConnection' must be provided in appsettings.json.");
-    }
-
-    // Log SQL queries and parameters (for development only, disable in production).
-    options.UseSqlServer(connectionString)
-           .EnableSensitiveDataLogging()  // Logs query parameters (e.g., username, password).
-           .LogTo(Console.WriteLine);     // Logs raw SQL queries to the console.
-});
 
 // Register UserAccessor as a scoped service.
 builder.Services.AddScoped<UserAccessor>();
@@ -36,11 +19,6 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
-});
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
 var app = builder.Build();

@@ -114,3 +114,7 @@ Backend/View/obj/project.nuget.cache
 .DS_Store
 Backend/BackendAPI/appsettings.Development.json
 Backend/View/appsettings.Development.json
+/Backend/Service/obj/project.assets.json
+/Backend/Service/obj/project.nuget.cache
+/Backend/Test/obj/project.assets.json
+/Backend/Test/obj/project.nuget.cache

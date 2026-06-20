@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Register.css';
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5013";
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -12,13 +13,25 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!username.trim()) {
+      setMessage('Username cannot be blank.');
+      return;
+    }
+    if (username.trim().length < 3) {
+      setMessage('Username must be at least 3 characters.');
+      return;
+    }
+    if (!password) {
+      setMessage('Password cannot be blank.');
+      return;
+    }
     if (password !== confirmPassword) {
       setMessage('Passwords do not match.');
       return;
     }
 
     try {
-      const response = await fetch('http://localhost:5013/api/auth/register', {
+        const response = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),

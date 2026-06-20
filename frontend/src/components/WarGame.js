@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../styles/WarGame.css";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5013";
 
 const WarGame = () => {
   const [players, setPlayers] = useState([]);
@@ -27,7 +28,7 @@ const WarGame = () => {
   const fetchPlayers = async () => {
     console.log("Fetching players...");
     try {
-      const response = await fetch("http://localhost:5013/api/game/players", {
+        const response = await fetch(`${API_URL}/api/game/players`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -53,7 +54,7 @@ const WarGame = () => {
   const initializeGame = async () => {
     console.log("Initializing game...");
     try {
-      const response = await fetch("http://localhost:5013/api/game/initialize", {
+        const response = await fetch(`${API_URL}/api/game/initialize`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(players.map((player) => player.name)), 
@@ -163,7 +164,7 @@ const playRound = () => {
 
   const getUserWins = async (username) => {
     try {
-      const response = await fetch(`http://localhost:5013/api/leaderboard/wins?username=${username}`, {
+        const response = await fetch(`${API_URL }/api/leaderboard/wins?username=${username}`, {
         method: 'GET',
       });
   
@@ -191,7 +192,7 @@ const playRound = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:5013/api/leaderboard/update', {
+      const response = await fetch(`${API_URL}/api/leaderboard/update`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
