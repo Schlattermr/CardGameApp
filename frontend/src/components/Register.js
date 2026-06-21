@@ -8,7 +8,15 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
-  const navigate = useNavigate(); // Use the navigate hook for redirection
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true');
+  const navigate = useNavigate();
+
+  const toggleDarkMode = () => {
+    setDarkMode((prev) => {
+      localStorage.setItem('darkMode', !prev);
+      return !prev;
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,7 +60,10 @@ const Register = () => {
   };
 
   return (
-    <div className="auth-container">
+    <div className={`auth-container ${darkMode ? 'dark-mode' : ''}`}>
+      <button className="dark-mode-toggle" onClick={toggleDarkMode}>
+        {darkMode ? 'Light Mode' : 'Dark Mode'}
+      </button>
       <h1 className="auth-header">Register</h1>
       <form className="auth-form" onSubmit={handleSubmit}>
         <div className="form-group">

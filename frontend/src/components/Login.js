@@ -8,7 +8,15 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isFading, setIsFading] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("darkMode") === "true");
   const navigate = useNavigate();
+
+  const toggleDarkMode = () => {
+    setDarkMode((prev) => {
+      localStorage.setItem("darkMode", !prev);
+      return !prev;
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,7 +62,10 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <div className={`auth-container ${isFading ? "fade-out" : ""}`}>
+    <div className={`auth-container ${isFading ? "fade-out" : ""} ${darkMode ? "dark-mode" : ""}`}>
+      <button className="dark-mode-toggle" onClick={toggleDarkMode}>
+        {darkMode ? "Light Mode" : "Dark Mode"}
+      </button>
       <h1 className="auth-header">Login</h1>
       <form className="auth-form" onSubmit={handleSubmit}>
         <div className="form-group">
