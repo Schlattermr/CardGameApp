@@ -25,7 +25,7 @@ public class Deck : IDeck
     public List<Card> CreateDeck(GameType game)
     {
         // Error handling for invalid GameType
-        if (game != GameType.War && game != GameType.Solitaire)
+        if (game != GameType.War && game != GameType.Solitaire && game != GameType.Blackjack)
         {
             return [];
         }
